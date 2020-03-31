@@ -1,10 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using System.Collections;
 using SocketIO;
 using UnityStandardAssets.Vehicles.Car;
 using System;
-using System.Security.AccessControl;
 using UnityEngine.SceneManagement;
 
 public class CommandServer : MonoBehaviour
@@ -14,6 +12,7 @@ public class CommandServer : MonoBehaviour
     private SocketIOComponent _socket;
     public CarController _carController;
     public WayPointUpdate _wayPointUpdate;
+    private WaypointTracker_pid _wpt; // for the cte
 
     // Use this for initialization
     void Start()
@@ -24,6 +23,7 @@ public class CommandServer : MonoBehaviour
         _socket.On("manual", onManual);
         _carController = CarRemoteControl.GetComponent<CarController>();
         _wayPointUpdate = CarRemoteControl.GetComponent<WayPointUpdate>();
+        _wpt = new WaypointTracker_pid();
     }
 
     // Update is called once per frame
@@ -46,7 +46,6 @@ public class CommandServer : MonoBehaviour
     void OnSteer(SocketIOEvent obj)
     {
         JSONObject jsonObject = obj.data;
-        //    print(float.Parse(jsonObject.GetField("steering_angle").str));
         CarRemoteControl.SteeringAngle = float.Parse(jsonObject.GetField("steering_angle").str);
         CarRemoteControl.Acceleration = float.Parse(jsonObject.GetField("throttle").str);
         CarRemoteControl.Confidence = int.Parse(jsonObject.GetField("confidence").str);
@@ -63,6 +62,16 @@ public class CommandServer : MonoBehaviour
             if ((Input.GetKey(KeyCode.W)) || (Input.GetKey(KeyCode.S)))
             {
                 _socket.Emit("telemetry", new JSONObject());
+
+                // Collect Data from the Car
+                //Dictionary<string, string> data = new Dictionary<string, string>();
+
+                //var cte = _wpt.CrossTrackError(_carController);
+                //Debug.Log("CTE: " + cte);
+
+                //data["cte"] = cte.ToString("N4");
+                //_socket.Emit("telemetry", new JSONObject(data));
+
             }
             // stop the simulation if max number of laps is reached
             else if (_wayPointUpdate.getLapNumber() != 1 && _wayPointUpdate.getLapNumber() > CarRemoteControl.MaxLaps)
@@ -85,6 +94,13 @@ public class CommandServer : MonoBehaviour
                     data["crash"] = _wayPointUpdate.isCrashInTheLastSecond() ? "1" : "0";
                     data["tot_obes"] = _wayPointUpdate.getOBENumber().ToString();
                     data["tot_crashes"] = _wayPointUpdate.getCrashNumber().ToString();
+                }
+
+                if (_wpt != null)
+                {
+                    var cte = _wpt.CrossTrackError(_carController);
+                    //Debug.Log("CTE: " + cte);
+                    data["cte"] = cte.ToString("N4");
                 }
 
                 data["image"] = Convert.ToBase64String(CameraHelper.CaptureFrame(FrontFacingCamera));

@@ -153,19 +153,33 @@ public class WayPointUpdate : MonoBehaviour
         return this.isCrashedInTheLastSecond;
     }
 
-    public void moveCarToNextWayPoint()
-    {
-        int currentWayPointNumber = getWayPointNumber(this.currentWayPoint);
+    public GameObject getNextWaypoint(){
+        int currentWayPointNumber = getWayPointNumber (this.currentWayPoint);
         int nextWayPointNumber = (currentWayPointNumber + 1) % this.numberOfWayPoints;
+        GameObject nextWayPoint = findWayPointByNumber (nextWayPointNumber);
+        return nextWayPoint;
+    }
 
+    public GameObject getPreviousWaypoint(){
+        int currentWayPointNumber = getWayPointNumber (this.currentWayPoint);
+        int previousWayPointNumber = (currentWayPointNumber - 1) % this.numberOfWayPoints;
+        GameObject previousWayPoint = findWayPointByNumber (previousWayPointNumber);
+        return previousWayPoint;
+    }
+
+    public void moveCarToNextWayPoint(){
+        //int currentWayPointNumber = getWayPointNumber (this.currentWayPoint);
+        //int nextWayPointNumber = (currentWayPointNumber + 1) % this.numberOfWayPoints;
+        //GameObject nextWayPoint = findWayPointByNumber (nextWayPointNumber);
+        
         // 1. update the wayPoint.
-        GameObject nextWayPoint = findWayPointByNumber(nextWayPointNumber);
+        GameObject nextWayPoint = getNextWaypoint();
 
         // 2. move the cat to the wayPoint
         Vector3 newRotation = nextWayPoint.transform.rotation.eulerAngles;
         this.transform.position = nextWayPoint.transform.position;
         this.transform.eulerAngles = newRotation;
-        solveCrash();
+        solveCrash ();
     }
 
     public int getCurrentWayPointNmber()
