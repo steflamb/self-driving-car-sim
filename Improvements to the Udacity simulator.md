@@ -1,6 +1,5 @@
 # Improvements to the Udacity simulator
 
--- 
 ### Unity version
 _IMPORTANT_: Moved the project from Unity 5.5.1 to Unity 5.5.6f 
 
@@ -13,7 +12,7 @@ _IMPORTANT_: Moved the project from Unity 5.5.1 to Unity 5.5.6f
 
 * Changed the body of water in LakeTrack using a reflective asset
 * Added waypoints to the LakeTrack and JungleTrack
-* Added a third track (MountainTrack) [link](https://assetstore.unity.com/ packages/3d/environments/roadways/mountain-race-track-53775)
+* Added a third track (MountainTrack) [link](https://assetstore.unity.com/packages/3d/environments/roadways/mountain-race-track-53775)
 * Added waypoints to the MountainTrack
 * Created a script to manage the day/night cycle (DayNightCycle.cs)
 * Added script to automatically detect out of bound episodes (OBEs) and collisions with scene objects (CarCollider.cs)
@@ -23,5 +22,3 @@ _IMPORTANT_: Moved the project from Unity 5.5.1 to Unity 5.5.6f
 * Modified the main UI of the car to display the lap/waypoint number, and confidence value (UISystem.cs)
 * Added the menu options to select the new scenes (MenuOptions.cs)
 * Added new scenes to the project (File -> Build Settings...)
-
-### Newer Additions
