@@ -23,30 +23,32 @@ public class WeatherController : MonoBehaviour
 	private float startTime;
 	private float timePassedInSeconds;
 	private Vector3 snowOffset;
-	private Vector3 rainOffset;
 
-	// minRait = 100
+    // minRait = 100
 
-	public WeatherController (){
+    public WeatherController (){
 		
 	}
 
 	void Start () {
 		startTime = Time.time;
-		Debug.Log(weather);
+		//Debug.Log(weather);
 		if (weather.Equals ("Rain")) {
+			rain.gameObject.SetActive (true);
 			snow.gameObject.SetActive (false);
 			fog.gameObject.SetActive (false);
-			changeSkybox ("Overcast1 Skybox");
+			//changeSkybox ("Overcast1 Skybox");
 		} else if (weather.Equals ("Snow")) {
+			snow.gameObject.SetActive (true);
 			rain.gameObject.SetActive (false);
 			fog.gameObject.SetActive (false);
 			snowOffset = snow.transform.position - carController.transform.position;
-			changeSkybox ("Overcast2 Skybox");
+			//changeSkybox ("Overcast2 Skybox");
 		} else if (weather.Equals ("Fog")) {
+			fog.gameObject.SetActive (true);
 			rain.gameObject.SetActive (false);
 			snow.gameObject.SetActive (false);
-			sun.color = new Vector4 (170.0f/255.0f, 170.0f/255.0f, 170.0f/255.0f, 170.0f/255.0f);
+			//sun.color = new Vector4 (170.0f/255.0f, 170.0f/255.0f, 170.0f/255.0f, 170.0f/255.0f);
 		} else {
 			rain.gameObject.SetActive (false);
 			snow.gameObject.SetActive (false);
