@@ -33,7 +33,7 @@ public class ReturnToMainMenu : MonoBehaviour
 
     public void GoBackToMainMenu()
     {
-        Debug.Log("going back to main menu");
+        Debug.Log("going back  to main menu");
         SceneManager.LoadScene("MainMenu");
     }
 }
