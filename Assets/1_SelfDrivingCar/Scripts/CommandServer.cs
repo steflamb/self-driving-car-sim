@@ -48,9 +48,16 @@ public class CommandServer : MonoBehaviour
         JSONObject jsonObject = obj.data;
         CarRemoteControl.SteeringAngle = float.Parse(jsonObject.GetField("steering_angle").str);
         CarRemoteControl.Acceleration = float.Parse(jsonObject.GetField("throttle").str);
+
+		// new fields for ICSE '20
         CarRemoteControl.Confidence = int.Parse(jsonObject.GetField("confidence").str);
         CarRemoteControl.Loss = float.Parse(jsonObject.GetField("loss").str);
         CarRemoteControl.MaxLaps = int.Parse(jsonObject.GetField("max_laps").str);
+
+		// new fields
+		//CarRemoteControl.Brake = float.Parse (jsonObject.GetField ("brake").str);
+		//CarRemoteControl.Intensity = int.Parse (jsonObject.GetField ("intensity").str);
+
         EmitTelemetry(obj);
     }
 
@@ -62,16 +69,6 @@ public class CommandServer : MonoBehaviour
             if ((Input.GetKey(KeyCode.W)) || (Input.GetKey(KeyCode.S)))
             {
                 _socket.Emit("telemetry", new JSONObject());
-
-                // Collect Data from the Car
-                //Dictionary<string, string> data = new Dictionary<string, string>();
-
-                //var cte = _wpt.CrossTrackError(_carController);
-                //Debug.Log("CTE: " + cte);
-
-                //data["cte"] = cte.ToString("N4");
-                //_socket.Emit("telemetry", new JSONObject(data));
-
             }
             // stop the simulation if max number of laps is reached
             else if (_wayPointUpdate.getLapNumber() != 1 && _wayPointUpdate.getLapNumber() > CarRemoteControl.MaxLaps)
@@ -86,6 +83,8 @@ public class CommandServer : MonoBehaviour
                 data["steering_angle"] = _carController.CurrentSteerAngle.ToString("N4");
                 data["throttle"] = _carController.AccelInput.ToString("N4");
                 data["speed"] = _carController.CurrentSpeed.ToString("N4");
+				data["brake"] = _carController.BrakeInput.ToString("N4");
+				data["intensity"] = WeatherController.getEmissionRatePercentage().ToString("N2");
 
                 if (_wayPointUpdate != null)
                 {
