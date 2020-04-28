@@ -24,7 +24,8 @@ public class WeatherController : MonoBehaviour
 	private float timePassedInSeconds;
 	private Vector3 snowOffset;
 
-    // minRait = 100
+	static private float emissionRate;
+	static private float emissionRatePercentage;
 
     public WeatherController (){
 		
@@ -60,14 +61,24 @@ public class WeatherController : MonoBehaviour
 		weather = weatherCondiction;
 	}
 
+	public static float getEmissionRate(){
+		return emissionRate;
+	}
+
+	public static float getEmissionRatePercentage(){
+		return emissionRatePercentage;
+	}
+
 	private void changeSkybox(string skyboxName){
 		RenderSettings.skybox = (Material)Resources.Load ("Skyboxes/" + skyboxName);
 		DynamicGI.UpdateEnvironment ();
 		sun.color = new Vector4 (128.0f/255.0f, 128/255.0f, 128/255.0f, 255/255.0f);
 	}
 
-	// Every 60 seconds move from shallowRain 
-
+	private void changeSunColor(Vector4 v){
+		sun.color = v;
+	}
+		
 	void Update () {
 		if (weather.Equals ("Sun")) {
 			return;
@@ -75,14 +86,14 @@ public class WeatherController : MonoBehaviour
 
 		timePassedInSeconds = Time.time - startTime;
 		float timePassedInSecondsCycle = timePassedInSeconds % cycleTimeInSeconds;
-		if (weather.Equals ("Rain")) {
-			changeEmissionStrenght (rain, timePassedInSecondsCycle, minRainEmitionRate, maxRainEmitionRate);
-		} else if (weather.Equals ("Fog")) {
-			changeEmissionStrenght (fog, timePassedInSecondsCycle, minFogEmitionRate, maxFogEmitionRate);
-		} else if (weather.Equals ("Snow")) {
-			changeEmissionStrenght (snow, timePassedInSecondsCycle, minSnowEmitionRate, maxSnowEmitionRate);
-			moveEffect (snow.gameObject, carController.gameObject, snowOffset);
 
+		if (weather.Equals ("Rain")) {
+			changeEmissionIntensity (rain, timePassedInSecondsCycle, minRainEmitionRate, maxRainEmitionRate);
+		} else if (weather.Equals ("Fog")) {
+			changeEmissionIntensity (fog, timePassedInSecondsCycle, minFogEmitionRate, maxFogEmitionRate);
+		} else if (weather.Equals ("Snow")) {
+			changeEmissionIntensity (snow, timePassedInSecondsCycle, minSnowEmitionRate, maxSnowEmitionRate);
+			moveEffect (snow.gameObject, carController.gameObject, snowOffset);
 		}
 	}
 
@@ -96,18 +107,27 @@ public class WeatherController : MonoBehaviour
 		}
 	}
 
-	private void changeEmissionStrenght(ParticleSystem weatherEffect,  float time, float minEmitionRate, float maxEmitionRate){
+	private void changeEmissionIntensity(ParticleSystem weatherEffect,  float time, float minEmitionRate, float maxEmitionRate){
 		float half = cycleTimeInSeconds / 2;
 		float rate = 0f;
 		if (time < half) {
 			// Increase effect
 			float percent = time / half;
 			rate = minEmitionRate + ((percent) * (maxEmitionRate - minEmitionRate));
+			//changeSunColor (new Vector4 (248/255.0f, 226/255.0f, 180/255.0f, 255/255.0f));
 		} else {
 			float percent = (time - half) / (float)(cycleTimeInSeconds - half);
 			rate = maxEmitionRate - ((percent) * System.Math.Abs (minEmitionRate - maxEmitionRate));
+			//changeSunColor (new Vector4 (220.0f/255.0f, 200/255.0f, 140/255.0f, 255/255.0f));
 		}
 		var emission = weatherEffect.emission;
 		emission.rateOverTime = rate;
+	
+		// set the object's field
+		emissionRate = rate;
+		emissionRatePercentage = rate / maxEmitionRate;
+		//Debug.Log (emissionRatePercentage);
+
 	}
+
 }
