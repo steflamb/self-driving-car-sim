@@ -11,10 +11,18 @@ namespace UnityStandardAssets.Vehicles.Car
 
         public float SteeringAngle { get; set; }
         public float Acceleration { get; set; }
+		private Steering s;
+
+		// new fields for ICSE '20
 		public int Confidence { get; set; }
 		public float Loss { get; set; }
 		public int MaxLaps { get; set; }
-        private Steering s;
+
+		// new fields
+		public float Brake { get; set; }
+		public int Intensity { get; set; }
+        public float CTE { get; set; }
+
 
         private void Awake()
         {
