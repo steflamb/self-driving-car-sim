@@ -2,13 +2,19 @@
 using UnityEngine.UI;
 using UnityStandardAssets.Vehicles.Car;
 using UnityEngine.SceneManagement;
+using System;
 
 public class UISystem : MonoSingleton<UISystem>
 {
 
     public CarController carController;
     public CarRemoteControl carRemoteControl;
-    public WayPointUpdate wayPointUpdate;
+    
+	public WayPointUpdate wayPointUpdate;
+	public WayPointManager wayPointManager;
+
+	public WaypointTracker_pid waypointTracker_pid;
+
     public string GoodCarStatusMessage;
     public string BadSCartatusMessage;
     public Text MPH_Text;
@@ -17,10 +23,16 @@ public class UISystem : MonoSingleton<UISystem>
     public Text RecordStatus_Text;
     public Text DriveStatus_Text;
     public Text SaveStatus_Text;
+
     public Text LapNumber_Text;
     public Text SectorNumber_Text;
+
     public Text Confidence_Text;
     public Text Loss_Text;
+
+    public Text CTE_Text;
+    public Text CTE_Value_Text;
+
     public GameObject RecordingPause;
     public GameObject RecordDisabled;
     public bool isTraining = false;
@@ -33,6 +45,8 @@ public class UISystem : MonoSingleton<UISystem>
     // Use this for initialization
     void Start()
     {
+		waypointTracker_pid = new WaypointTracker_pid ();
+
         topSpeed = carController.MaxSpeed;
         recording = false;
         RecordingPause.SetActive(false);
@@ -41,21 +55,25 @@ public class UISystem : MonoSingleton<UISystem>
         SaveStatus_Text.text = "";
         SetAngleValue(0);
         SetMPHValue(0);
+		SetLapNumber(1);
 
         if (!isTraining)
         {
-            SetLapNumber(1);
             DriveStatus_Text.text = "Mode: Autonomous";
             RecordDisabled.SetActive(true);
             RecordStatus_Text.text = "";
-            Confidence_Text.color = Color.green;
-            Loss_Text.color = Color.green;
+			SetConfidenceColor(Color.green);
         }
     }
 
     public void SetLossValue(float value)
     {
         this.Loss_Text.text = value.ToString("#0.0000");
+    }
+
+    public void SetCTEValue(float value)
+    {
+        this.CTE_Value_Text.text = value.ToString("#0.0000");
     }
 
     public void SetLapNumber(int value)
@@ -115,30 +133,27 @@ public class UISystem : MonoSingleton<UISystem>
     {
         SetMPHValue(carController.CurrentSpeed);
         SetAngleValue(carController.CurrentSteerAngle);
-        if (!isTraining)
-        {
-            SetLapNumber(wayPointUpdate.getLapNumber());
-            SetSectorNumber(wayPointUpdate.getCurrentWayPointNmber(), wayPointUpdate.getTotalWayPointNmber() - 1);
 
-            //			Color confidence ;
-            if (carRemoteControl.Confidence == -1)
-            {
-                SetConfidenceColor(Color.red);
-            }
-            else if (carRemoteControl.Confidence == 0)
-            {
-                SetConfidenceColor(Color.yellow);
-            }
-            else if (carRemoteControl.Confidence == 1)
-            {
-                SetConfidenceColor(Color.green);
-            }
+		SetCTEValue(waypointTracker_pid.CrossTrackError(carController));
 
-            //			Color confidence = carRemoteControl.Confidence > 0 ? Color.green : Color.red;
+		if (!isTraining) {
+			SetLapNumber (wayPointUpdate.getLapNumber ());
+			SetSectorNumber (wayPointUpdate.getCurrentWayPointNmber (), wayPointUpdate.getTotalWayPointNmber () - 1);
 
-            //			SetConfidenceColor (confidence);
-            SetLossValue(carRemoteControl.Loss);
-        }
+			if (carRemoteControl.Confidence == -1) {
+				SetConfidenceColor (Color.red);
+			} else if (carRemoteControl.Confidence == 0) {
+				SetConfidenceColor (Color.yellow);
+			} else if (carRemoteControl.Confidence == 1) {
+				SetConfidenceColor (Color.green);
+			}
+
+			SetLossValue (carRemoteControl.Loss);
+
+		} else {
+//			SetLapNumber(wayPointManager.getLapNumber());
+//			SetSectorNumber(wayPointManager.getCurrentWayPointNumber(), wayPointManager.getTotalWayPointNumber() - 1);
+		}
     }
 
     // Update is called once per frame
