@@ -168,10 +168,6 @@ public class WayPointUpdate : MonoBehaviour
     }
 
     public void moveCarToNextWayPoint(){
-        //int currentWayPointNumber = getWayPointNumber (this.currentWayPoint);
-        //int nextWayPointNumber = (currentWayPointNumber + 1) % this.numberOfWayPoints;
-        //GameObject nextWayPoint = findWayPointByNumber (nextWayPointNumber);
-        
         // 1. update the wayPoint.
         GameObject nextWayPoint = getNextWaypoint();
 

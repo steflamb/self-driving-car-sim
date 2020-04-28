@@ -36,13 +36,7 @@ public class CarCollider : MonoBehaviour
             Debug.Log("OUT OF BOUND Episode " + obe);
             wayPointUpdate.registerCrash(obe);
         }
-
-        //		if (RenderSettings.skybox.GetType == "SkyboxProcedural")
-
-        //		RenderSettings.skybox = (Material) Resources.Load("SkyboxProcedural");
-        //		RenderSettings.skybox = (Material) Resources.Load("Default-Skybox");
-        //		Debug.Log (RenderSettings.skybox.GetTag);
-        //		DynamicGI.UpdateEnvironment ();
+	
     }
 
     public int getLastOBENumber()
