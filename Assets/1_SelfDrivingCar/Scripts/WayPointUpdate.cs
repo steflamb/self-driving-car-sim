@@ -25,6 +25,7 @@ public class WayPointUpdate : MonoBehaviour
 	private int tot_obes = 0;
 	private int tot_crashes = 0;
 	public CarCollider carCollider;
+	private float timeLeft = 120.0f;
 
 	// Use this for initialization
 	void Start ()
@@ -76,14 +77,25 @@ public class WayPointUpdate : MonoBehaviour
 	{
 		solveLastCrash ();
 		if (carController.CurrentSpeed < 1) {
-			stuckTimer += 1;
-			if (stuckTimer > 120) { // 5 seconds
+
+			timeLeft -= Time.deltaTime;
+
+			if (timeLeft < 0) {
 				registerCrash (carCollider.getLastOBENumber ());
-				stuckTimer = 0;
+				timeLeft = 120.0f;
 			}
 		} else {
-			stuckTimer = 0;
+			timeLeft = 120.0f;
 		}
+
+//			stuckTimer += 1;
+//			if (stuckTimer > 120) { // 5 seconds
+//				registerCrash (carCollider.getLastOBENumber ());
+//				stuckTimer = 120.0f;
+//			}
+//		} else {
+//			stuckTimer = 120.0f;
+//		}
 	}
 
 	private void stopCar ()
