@@ -8763,7 +8763,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   carController: {fileID: 750904040}
-  rain: {fileID: 0}
+  rain: {fileID: 1490338444}
   snow: {fileID: 2072804037}
   fog: {fileID: 84647738}
   sun: {fileID: 428566102}
@@ -12368,6 +12368,11 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!198 &1490338444 stripped
+ParticleSystem:
+  m_PrefabParentObject: {fileID: 198000013866684486, guid: d0c0b49979d372942ae5a964d9364111,
+    type: 2}
+  m_PrefabInternal: {fileID: 1490338441}
 --- !u!1001 &1504480074
 Prefab:
   m_ObjectHideFlags: 0
