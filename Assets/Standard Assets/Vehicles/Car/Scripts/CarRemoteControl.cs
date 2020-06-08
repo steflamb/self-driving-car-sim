@@ -20,7 +20,7 @@ namespace UnityStandardAssets.Vehicles.Car
 
 		// new fields
 		public float Brake { get; set; }
-		public int Intensity { get; set; }
+		// public int Intensity { get; set; }
         public float CTE { get; set; }
 
 

@@ -81,7 +81,7 @@ public class CommandServer : MonoBehaviour
 				data ["throttle"] = _carController.AccelInput.ToString ("N4");
 				data ["speed"] = _carController.CurrentSpeed.ToString ("N4");
 				data ["brake"] = _carController.BrakeInput.ToString ("N4");
-				data ["intensity"] = WeatherController.getEmissionRatePercentage ().ToString ("N2");
+				//data ["intensity"] = WeatherController.getEmissionRatePercentage ().ToString ("N2");
 
 				if (_wayPointUpdate != null) {
 					data ["lapNumber"] = _wayPointUpdate.getLapNumber ().ToString ();
