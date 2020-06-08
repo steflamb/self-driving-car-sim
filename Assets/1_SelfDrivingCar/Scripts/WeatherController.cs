@@ -13,7 +13,10 @@ public class WeatherController : MonoBehaviour
 	public ParticleSystem snow;
 	public ParticleSystem fog;
 	public Light sun;
-	private float cycleTimeInSeconds = 60;		// CHANGE THE TOTAL TIME CYCLE OF THE EFFECT
+
+	// CHANGE THE TOTAL TIME CYCLE OF THE EFFECT
+	private float cycleTimeInSeconds = 60;
+
 	public int maxRainEmitionRate = 10000;
 	public int minRainEmitionRate = 100;
 	public int maxFogEmitionRate = 5000;
@@ -27,11 +30,13 @@ public class WeatherController : MonoBehaviour
 	static private float emissionRate;
 	static private float emissionRatePercentage;
 
-    public WeatherController (){
+	public WeatherController ()
+	{
 		
 	}
 
-	void Start () {
+	void Start ()
+	{
 		startTime = Time.time;
 		//Debug.Log(weather);
 		if (weather.Equals ("Rain")) {
@@ -56,34 +61,36 @@ public class WeatherController : MonoBehaviour
 			fog.gameObject.SetActive (false);
 		}
 	}
-		
-	public static void setWeather(String weatherCondiction){
+
+	public static void setWeather (String weatherCondiction)
+	{
 		weather = weatherCondiction;
 	}
 
-	public static float getEmissionRate(){
+	public static float getEmissionRate ()
+	{
 		return emissionRate;
 	}
 
-	public static float getEmissionRatePercentage(){
+	public static float getEmissionRatePercentage ()
+	{
 		return emissionRatePercentage;
 	}
 
-	private void changeSkybox(string skyboxName){
+	private void changeSkybox (string skyboxName)
+	{
 		RenderSettings.skybox = (Material)Resources.Load ("Skyboxes/" + skyboxName);
 		DynamicGI.UpdateEnvironment ();
-		sun.color = new Vector4 (128.0f/255.0f, 128/255.0f, 128/255.0f, 255/255.0f);
+		sun.color = new Vector4 (128.0f / 255.0f, 128 / 255.0f, 128 / 255.0f, 255 / 255.0f);
 	}
 
-	private void changeSunColor(Vector4 v){
+	private void changeSunColor (Vector4 v)
+	{
 		sun.color = v;
 	}
-		
-	void Update () {
-		if (weather.Equals ("Sun")) {
-			return;
-		}
 
+	void Update ()
+	{
 		timePassedInSeconds = Time.time - startTime;
 		float timePassedInSecondsCycle = timePassedInSeconds % cycleTimeInSeconds;
 
@@ -97,8 +104,9 @@ public class WeatherController : MonoBehaviour
 		}
 	}
 
-	private void moveEffect(GameObject effect, GameObject target, Vector3 offset){
-		effect.gameObject.transform.position = target.transform.position +  offset;
+	private void moveEffect (GameObject effect, GameObject target, Vector3 offset)
+	{
+		effect.gameObject.transform.position = target.transform.position + offset;
 		if (SceneManager.GetActiveScene ().name.Contains ("Lake")) {
 			Vector3 dir = effect.transform.position - target.transform.position; // get point direction relative to pivot
 			dir = Quaternion.Euler (target.transform.eulerAngles) * dir; // rotate it
@@ -107,7 +115,8 @@ public class WeatherController : MonoBehaviour
 		}
 	}
 
-	private void changeEmissionIntensity(ParticleSystem weatherEffect,  float time, float minEmitionRate, float maxEmitionRate){
+	private void changeEmissionIntensity (ParticleSystem weatherEffect, float time, float minEmitionRate, float maxEmitionRate)
+	{
 		float half = cycleTimeInSeconds / 2;
 		float rate = 0f;
 		if (time < half) {

@@ -6,28 +6,28 @@ using UnityEngine.SceneManagement;
 public class MenuOptions : MonoBehaviour
 {
 	private int trackIndex = 0;
-    private Outline[] outlines;
-	private string[] trackNames = new string[]{"LakeTrack", "JungleTrack", "MountainTrack"};
+	private Outline[] outlines;
+	private string[] trackNames = new string[]{ "LakeTrack", "JungleTrack", "MountainTrack" };
 
-	private string[] trackDayOrNight = new string[]{"Day", "DayNightCycle"};
+	private string[] trackDayOrNight = new string[]{ "Day", "DayNightCycle" };
 	private int trackTimeIndex = 0;
 	private Outline[] dayTimeOutlines;
 
-	private string[] augmentationNames = new string[]{"Sun", "Rain", "Snow", "Fog"};
+	private string[] augmentationNames = new string[]{ "Sun", "Rain", "Snow", "Fog" };
 	private int augmentationIndex = 0;
 	private Outline[] augmentationOutlines;
 
-    public void Start ()
-    {
-		GameObject[] tracks = GameObject.FindGameObjectsWithTag("Tracks");
+	public void Start ()
+	{
+		GameObject[] tracks = GameObject.FindGameObjectsWithTag ("Tracks");
 		this.outlines = new Outline[tracks.Length];
-		for(int i = 0; i<tracks.Length; i++){
+		for (int i = 0; i < tracks.Length; i++) {
 			Outline trackOption = tracks [i].GetComponent<Outline> ();
 			if (trackOption.name == "Lake Track") {
 				outlines [0] = trackOption;
 			} else if (trackOption.name == "Jungle Track") {
 				outlines [1] = trackOption;
-			} else if (trackOption.name == "Montain Track"){
+			} else if (trackOption.name == "Montain Track") {
 				outlines [2] = trackOption;
 			} 
 		}
@@ -36,8 +36,8 @@ public class MenuOptions : MonoBehaviour
 		}
 
 
-		//setup day night
-		GameObject[] dayNight = GameObject.FindGameObjectsWithTag("TimeOfDay");
+		// setup day night
+		GameObject[] dayNight = GameObject.FindGameObjectsWithTag ("TimeOfDay");
 		this.dayTimeOutlines = new Outline[dayNight.Length];
 		for (int i = 0; i < dayNight.Length; i++) {
 			Outline dayNightOption = dayNight [i].GetComponent<Outline> ();
@@ -52,7 +52,7 @@ public class MenuOptions : MonoBehaviour
 		}
 
 		//setup augmentations
-		GameObject[] augmentations = GameObject.FindGameObjectsWithTag("Augmentation");
+		GameObject[] augmentations = GameObject.FindGameObjectsWithTag ("Augmentation");
 		this.augmentationOutlines = new Outline[augmentations.Length];
 		for (int i = 0; i < augmentations.Length; i++) {
 			Outline augmentation = augmentations [i].GetComponent<Outline> ();
@@ -70,50 +70,50 @@ public class MenuOptions : MonoBehaviour
 			augmentationOutlines [0].effectColor = new Color (0, 0, 0);
 		}
 
-    }
-
-	public void ControlMenu()
-	{
-		SceneManager.LoadScene("ControlMenu");
 	}
 
-	public void MainMenu()
+	public void ControlMenu ()
+	{
+		SceneManager.LoadScene ("ControlMenu");
+	}
+
+	public void MainMenu ()
 	{
 		//Debug.Log ("go to main menu");
 		SceneManager.LoadScene ("MenuScene");
 	}
 
-    public void StartDrivingMode()
-    {
+	public void StartDrivingMode ()
+	{
 		WeatherController.setWeather (augmentationNames [augmentationIndex]);
-		SceneManager.LoadScene(trackNames[trackIndex] + "Training" + trackDayOrNight[trackTimeIndex]);
+		SceneManager.LoadScene (trackNames [trackIndex] + "Training" + trackDayOrNight [trackTimeIndex]);
 		
-    }
+	}
 
-    public void StartAutonomousMode()
-    {
+	public void StartAutonomousMode ()
+	{
 		WeatherController.setWeather (augmentationNames [augmentationIndex]);
-		SceneManager.LoadScene(trackNames[trackIndex] + "Autonomous" + trackDayOrNight[trackTimeIndex]);
-    }
+		SceneManager.LoadScene (trackNames [trackIndex] + "Autonomous" + trackDayOrNight [trackTimeIndex]);
+	}
 
-    public void SetLakeTrack()
-    {
+	public void SetLakeTrack ()
+	{
 		
 		trackIndex = 0;
 		outlines [1].effectColor = new Color (255, 255, 255);
 		outlines [2].effectColor = new Color (255, 255, 255);
 		outlines [trackIndex].effectColor = new Color (0, 0, 0);
-    }
+	}
 
-    public void SetJungleTrack()
-    {
+	public void SetJungleTrack ()
+	{
 		trackIndex = 1;
 		outlines [0].effectColor = new Color (255, 255, 255);
 		outlines [2].effectColor = new Color (255, 255, 255);
 		outlines [trackIndex].effectColor = new Color (0, 0, 0);
-    }
+	}
 
-	public void SetMountainTrack()
+	public void SetMountainTrack ()
 	{
 		trackIndex = 2;
 		outlines [0].effectColor = new Color (255, 255, 255);
@@ -121,50 +121,53 @@ public class MenuOptions : MonoBehaviour
 		outlines [trackIndex].effectColor = new Color (0, 0, 0);
 	}
 
-	public void setDayTrack(){
+	public void setDayTrack ()
+	{
 		trackTimeIndex = 0;
-		dayTimeOutlines[0].effectColor = new Color (0, 0, 0);
-		dayTimeOutlines[1].effectColor = new Color (255, 255, 255);
+		dayTimeOutlines [0].effectColor = new Color (0, 0, 0);
+		dayTimeOutlines [1].effectColor = new Color (255, 255, 255);
 	}
 
-	public void setNightTrack(){
+	public void setNightTrack ()
+	{
 		trackTimeIndex = 1;
-		dayTimeOutlines[1].effectColor = new Color (0, 0, 0);
-		dayTimeOutlines[0].effectColor = new Color (255, 255, 255);
+		dayTimeOutlines [1].effectColor = new Color (0, 0, 0);
+		dayTimeOutlines [0].effectColor = new Color (255, 255, 255);
 	}
 
-	public void setNormalAugmentation(){
+	public void setNormalAugmentation ()
+	{
 		augmentationIndex = 0;
-		augmentationOutlines[0].effectColor = new Color (0, 0, 0);
-		augmentationOutlines[1].effectColor = new Color (255, 255, 255);
-		augmentationOutlines[2].effectColor = new Color (255, 255, 255);
-		augmentationOutlines[3].effectColor = new Color (255, 255, 255);
+		augmentationOutlines [0].effectColor = new Color (0, 0, 0);
+		augmentationOutlines [1].effectColor = new Color (255, 255, 255);
+		augmentationOutlines [2].effectColor = new Color (255, 255, 255);
+		augmentationOutlines [3].effectColor = new Color (255, 255, 255);
 	}
 
 	public void setReinyAugmentation(){
 		augmentationIndex = 1;
-		augmentationOutlines[1].effectColor = new Color (0, 0, 0);
-		augmentationOutlines[0].effectColor = new Color (255, 255, 255);
-		augmentationOutlines[2].effectColor = new Color (255, 255, 255);
-		augmentationOutlines[3].effectColor = new Color (255, 255, 255);
+		augmentationOutlines [1].effectColor = new Color (0, 0, 0);
+		augmentationOutlines [0].effectColor = new Color (255, 255, 255);
+		augmentationOutlines [2].effectColor = new Color (255, 255, 255);
+		augmentationOutlines [3].effectColor = new Color (255, 255, 255);
 	}
 
-	public void setSnowyAugmentation(){
+	public void setSnowyAugmentation ()
+	{
 		augmentationIndex = 2;
-		augmentationOutlines[2].effectColor = new Color (0, 0, 0);
-		augmentationOutlines[0].effectColor = new Color (255, 255, 255);
-		augmentationOutlines[1].effectColor = new Color (255, 255, 255);
-		augmentationOutlines[3].effectColor = new Color (255, 255, 255);
+		augmentationOutlines [2].effectColor = new Color (0, 0, 0);
+		augmentationOutlines [0].effectColor = new Color (255, 255, 255);
+		augmentationOutlines [1].effectColor = new Color (255, 255, 255);
+		augmentationOutlines [3].effectColor = new Color (255, 255, 255);
 	}
 
-	public void setFoggyAugmentation(){
+	public void setFoggyAugmentation ()
+	{
 		augmentationIndex = 3;
-		augmentationOutlines[3].effectColor = new Color (0, 0, 0);
-		augmentationOutlines[0].effectColor = new Color (255, 255, 255);
-		augmentationOutlines[1].effectColor = new Color (255, 255, 255);
-		augmentationOutlines[2].effectColor = new Color (255, 255, 255);
+		augmentationOutlines [3].effectColor = new Color (0, 0, 0);
+		augmentationOutlines [0].effectColor = new Color (255, 255, 255);
+		augmentationOutlines [1].effectColor = new Color (255, 255, 255);
+		augmentationOutlines [2].effectColor = new Color (255, 255, 255);
 	}
-
-
-
+	
 }
