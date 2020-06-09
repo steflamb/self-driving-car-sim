@@ -27,9 +27,6 @@ public class UISystem : MonoSingleton<UISystem>
 	public Text LapNumber_Text;
 	public Text SectorNumber_Text;
 
-	public Text Confidence_Text;
-	public Text Loss_Text;
-
 	public Text CTE_Text;
 	public Text CTE_Value_Text;
 
@@ -61,13 +58,7 @@ public class UISystem : MonoSingleton<UISystem>
 			DriveStatus_Text.text = "Mode: Autonomous";
 			RecordDisabled.SetActive (true);
 			RecordStatus_Text.text = "";
-			SetConfidenceColor (Color.green);
 		}
-	}
-
-	public void SetLossValue (float value)
-	{
-		this.Loss_Text.text = value.ToString ("#0.0000");
 	}
 
 	public void SetCTEValue (float value)
@@ -84,13 +75,7 @@ public class UISystem : MonoSingleton<UISystem>
 	{
 		this.SectorNumber_Text.text = value.ToString () + " of " + totalSectors.ToString ();
 	}
-
-	public void SetConfidenceColor (Color color)
-	{
-		Confidence_Text.color = color;
-		Loss_Text.color = color;
-	}
-
+		
 	public void SetAngleValue (float value)
 	{
 		Angle_Text.text = value.ToString ("N2") + "°";
@@ -133,17 +118,6 @@ public class UISystem : MonoSingleton<UISystem>
 		if (!isTraining) {
 			SetLapNumber (wayPointUpdate.getLapNumber ());
 			SetSectorNumber (wayPointUpdate.getCurrentWayPointNmber (), wayPointUpdate.getTotalWayPointNmber () - 1);
-
-			if (carRemoteControl.Confidence == -1) {
-				SetConfidenceColor (Color.red);
-			} else if (carRemoteControl.Confidence == 0) {
-				SetConfidenceColor (Color.yellow);
-			} else if (carRemoteControl.Confidence == 1) {
-				SetConfidenceColor (Color.green);
-			}
-
-			SetLossValue (carRemoteControl.Loss);
-
 		} else {
 //			SetLapNumber(wayPointManager.getLapNumber());
 //			SetSectorNumber(wayPointManager.getCurrentWayPointNumber(), wayPointManager.getTotalWayPointNumber() - 1);

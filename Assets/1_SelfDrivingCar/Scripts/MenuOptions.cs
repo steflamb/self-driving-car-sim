@@ -85,14 +85,14 @@ public class MenuOptions : MonoBehaviour
 
 	public void StartDrivingMode ()
 	{
-		WeatherController.setWeather (augmentationNames [augmentationIndex]);
+		// WeatherController.setWeather (augmentationNames [augmentationIndex]);
 		SceneManager.LoadScene (trackNames [trackIndex] + "Training" + trackDayOrNight [trackTimeIndex]);
 		
 	}
 
 	public void StartAutonomousMode ()
 	{
-		WeatherController.setWeather (augmentationNames [augmentationIndex]);
+		// WeatherController.setWeather (augmentationNames [augmentationIndex]);
 		SceneManager.LoadScene (trackNames [trackIndex] + "Autonomous" + trackDayOrNight [trackTimeIndex]);
 	}
 

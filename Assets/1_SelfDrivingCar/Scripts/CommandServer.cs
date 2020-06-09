@@ -52,8 +52,6 @@ public class CommandServer : MonoBehaviour
 		CarRemoteControl.Acceleration = float.Parse (jsonObject.GetField ("throttle").str);
 
 		// new fields for ICSE '20
-		CarRemoteControl.Confidence = int.Parse (jsonObject.GetField ("confidence").str);
-		CarRemoteControl.Loss = float.Parse (jsonObject.GetField ("loss").str);
 		CarRemoteControl.MaxLaps = int.Parse (jsonObject.GetField ("max_laps").str);
 
 		// new fields
@@ -81,7 +79,6 @@ public class CommandServer : MonoBehaviour
 				data ["throttle"] = _carController.AccelInput.ToString ("N4");
 				data ["speed"] = _carController.CurrentSpeed.ToString ("N4");
 				data ["brake"] = _carController.BrakeInput.ToString ("N4");
-				//data ["intensity"] = WeatherController.getEmissionRatePercentage ().ToString ("N2");
 
 				if (_wayPointUpdate != null) {
 					data ["lapNumber"] = _wayPointUpdate.getLapNumber ().ToString ();

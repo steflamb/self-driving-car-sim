@@ -14,8 +14,6 @@ namespace UnityStandardAssets.Vehicles.Car
 		private Steering s;
 
 		// new fields for ICSE '20
-		public int Confidence { get; set; }
-		public float Loss { get; set; }
 		public int MaxLaps { get; set; }
 
 		// new fields
