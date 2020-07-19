@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.Vehicles.Car;
+using UnityEngine.SceneManagement;
+
 
 public class WayPointUpdate : MonoBehaviour
 {
@@ -46,6 +48,8 @@ public class WayPointUpdate : MonoBehaviour
 	{
 		detectCrash ();
 		if (this.isCrash ()) {
+			SceneManager.LoadScene ("MenuScene");
+
 			if (carController.CurrentSpeed > 0.5) {
 				stopCar ();
 			} else {
