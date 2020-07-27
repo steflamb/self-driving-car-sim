@@ -14,7 +14,22 @@ public class CommandServer : MonoBehaviour
 	public WayPointUpdate _wayPointUpdate;
 	// for the cte
 	private WaypointTracker_pid _wpt;
+	int startingTime;
 
+	public static int Current()
+	{
+		DateTime epochStart = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+		int currentEpochTime = (int)(DateTime.UtcNow - epochStart).TotalSeconds;
+
+		return currentEpochTime;
+	}
+
+	public static int SecondsElapsed(int t1)
+	{
+		int difference = Current() - t1;
+
+		return Mathf.Abs(difference);
+	}
 
 	// Use this for initialization
 	void Start ()
@@ -26,6 +41,7 @@ public class CommandServer : MonoBehaviour
 		_carController = CarRemoteControl.GetComponent<CarController> ();
 		_wayPointUpdate = CarRemoteControl.GetComponent<WayPointUpdate> ();
 		_wpt = new WaypointTracker_pid ();
+		startingTime = Current ();
 	}
 
 	// Update is called once per frame
@@ -65,6 +81,8 @@ public class CommandServer : MonoBehaviour
 
 	void EmitTelemetry (SocketIOEvent obj)
 	{
+		DateTime actualTime;
+
 		UnityMainThreadDispatcher.Instance ().Enqueue (() => {
 			// send only if it's not being manually driven
 			if ((Input.GetKey (KeyCode.W)) || (Input.GetKey (KeyCode.S))) {
@@ -89,6 +107,11 @@ public class CommandServer : MonoBehaviour
 					data ["crash"] = _wayPointUpdate.isCrashInTheLastSecond () ? "1" : "0";
 					data ["tot_obes"] = _wayPointUpdate.getOBENumber ().ToString ();
 					data ["tot_crashes"] = _wayPointUpdate.getCrashNumber ().ToString ();
+					data ["distance"] = _wayPointUpdate.getDrivenDistance().ToString();
+
+					int difference = Mathf.Abs(Current() - startingTime);
+					// Debug.Log("simulationTime (s): " + difference);
+					data ["sim_time"] = difference.ToString();
 				}
 
 				if (_wpt != null) {

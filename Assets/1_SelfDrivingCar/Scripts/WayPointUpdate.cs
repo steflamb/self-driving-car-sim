@@ -26,6 +26,7 @@ public class WayPointUpdate : MonoBehaviour
 	private int tot_crashes = 0;
 	public CarCollider carCollider;
 	private float timeLeft = 120.0f;
+	private float total_driven_distance = 0.0f;
 
 	// Use this for initialization
 	void Start ()
@@ -65,7 +66,8 @@ public class WayPointUpdate : MonoBehaviour
 						if (this.currentWayPoint == this.firstWayPoint) {
 							this.laps += 1;
 						}
-						//  Debug.Log ("Waypoint: " + this.currentWayPoint.name + " distance = " + dist + " lap number " + this.laps);
+						total_driven_distance += dist;
+						// Debug.Log ("Waypoint: " + this.currentWayPoint.name + " distance = " + dist + " tot distance = " + total_driven_distance + " lap number " + this.laps);
 					}
 				}
 			}
@@ -196,6 +198,11 @@ public class WayPointUpdate : MonoBehaviour
 	public int getOBENumber ()
 	{
 		return this.tot_obes;
+	}
+
+	public float getDrivenDistance ()
+	{
+		return this.total_driven_distance;
 	}
 
 	public int getCrashNumber ()
