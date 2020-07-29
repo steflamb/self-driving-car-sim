@@ -112,6 +112,10 @@ public class CommandServer : MonoBehaviour
 					int difference = Mathf.Abs(Current() - startingTime);
 					// Debug.Log("simulationTime (s): " + difference);
 					data ["sim_time"] = difference.ToString();
+
+					float ang_diff = _wayPointUpdate.getAngularDifference();
+					// Debug.Log("angular difference: " + ang_diff);
+					data ["ang_diff"] = ang_diff.ToString();
 				}
 
 				if (_wpt != null) {

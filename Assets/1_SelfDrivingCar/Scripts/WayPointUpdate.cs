@@ -15,6 +15,7 @@ public class WayPointUpdate : MonoBehaviour
 	private float wayPointActivationDistance = 5.00f;
 	private float timeToGo;
 	private float updateDelay = 0.1f;
+
 	private CarController carController;
 	private bool isCarCrashed;
 	private int stuckTimer;
@@ -24,9 +25,11 @@ public class WayPointUpdate : MonoBehaviour
 	private int decelerationSign = 1;
 	private int tot_obes = 0;
 	private int tot_crashes = 0;
+
 	public CarCollider carCollider;
 	private float timeLeft = 120.0f;
 	private float total_driven_distance = 0.0f;
+	private float angular_difference = 0.0f;
 
 	// Use this for initialization
 	void Start ()
@@ -60,7 +63,14 @@ public class WayPointUpdate : MonoBehaviour
 		if (Time.fixedTime >= timeToGo) {
 			foreach (GameObject wayPoint in this.waypoints) {
 				if (getWayPointNumber (wayPoint) == (getWayPointNumber (currentWayPoint) + 1) % numberOfWayPoints) {
+
+					// distance between can and next waypoint
 					float dist = Vector3.Distance (this.transform.position, wayPoint.transform.position);
+
+					// angular difference
+					Vector3 targetDir = wayPoint.transform.position - this.transform.position;
+					this.angular_difference = Vector3.Angle(targetDir, transform.forward);
+
 					if (dist < wayPointActivationDistance) {
 						this.currentWayPoint = wayPoint;
 						if (this.currentWayPoint == this.firstWayPoint) {
@@ -73,6 +83,7 @@ public class WayPointUpdate : MonoBehaviour
 			}
 			this.timeToGo = Time.fixedTime + updateDelay;
 		}
+			
 	}
 
 	private void detectCrash ()
@@ -115,10 +126,13 @@ public class WayPointUpdate : MonoBehaviour
 	// this is actually OBE
 	public void registerCrash (int obe_num)
 	{
-		this.isCarCrashed = true;
-		this.isCrashedInTheLastSecond = true;
-		this.lastCrash = System.DateTime.Now.ToFileTime ();
-		this.tot_obes = obe_num;
+		// TODO: fixes erroneous OBE when the simulation starts. Find a better way.
+		if (getWayPointNumber (this.currentWayPoint) > 1) {
+			this.isCarCrashed = true;
+			this.isCrashedInTheLastSecond = true;
+			this.lastCrash = System.DateTime.Now.ToFileTime ();
+			this.tot_obes = obe_num;
+		}
 	}
 
 	public void registerCollision (int collision_num)
@@ -203,6 +217,11 @@ public class WayPointUpdate : MonoBehaviour
 	public float getDrivenDistance ()
 	{
 		return this.total_driven_distance;
+	}
+
+	public float getAngularDifference ()
+	{
+		return this.angular_difference;
 	}
 
 	public int getCrashNumber ()
