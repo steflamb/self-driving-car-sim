@@ -38,6 +38,7 @@ public class CommandServer : MonoBehaviour
 		_socket.On ("open", OnOpen);
 		_socket.On ("steer", OnSteer);
 		_socket.On ("manual", onManual);
+		_socket.On ("shutdown", onShutdown);
 		_carController = CarRemoteControl.GetComponent<CarController> ();
 		_wayPointUpdate = CarRemoteControl.GetComponent<WayPointUpdate> ();
 		_wpt = new WaypointTracker_pid ();
@@ -59,6 +60,16 @@ public class CommandServer : MonoBehaviour
 	void onManual (SocketIOEvent obj)
 	{
 		EmitTelemetry (obj);
+	}
+
+	void onShutdown (SocketIOEvent obj)
+	{
+		Debug.Log ("within onShutdown :)");
+		_socket.Emit ("disconnect", new JSONObject ());
+		Application.Quit();
+
+//		SceneManager.LoadScene ("MenuScene");
+//		_socket.Emit ("telemetry", new JSONObject ());
 	}
 
 	void OnSteer (SocketIOEvent obj)
@@ -89,9 +100,10 @@ public class CommandServer : MonoBehaviour
 				_socket.Emit ("telemetry", new JSONObject ());
 			}
             // stop the simulation if max number of laps is reached
-            else if (_wayPointUpdate.getLapNumber () != 1 && _wayPointUpdate.getLapNumber () > CarRemoteControl.MaxLaps) {
-				SceneManager.LoadScene ("MenuScene");
-			} else {
+            // else if (_wayPointUpdate.getLapNumber () != 1 && _wayPointUpdate.getLapNumber () > CarRemoteControl.MaxLaps) {
+			//	SceneManager.LoadScene ("MenuScene");
+			//} 
+			else {
 				// Collect Data from the Car
 				Dictionary<string, string> data = new Dictionary<string, string> ();
 
