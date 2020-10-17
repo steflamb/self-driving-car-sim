@@ -15,7 +15,6 @@ public class WayPointUpdate : MonoBehaviour
 	private float wayPointActivationDistance = 5.00f;
 	private float timeToGo;
 	private float updateDelay = 0.1f;
-
 	private CarController carController;
 	private bool isCarCrashed;
 	private int stuckTimer;
@@ -73,50 +72,43 @@ public class WayPointUpdate : MonoBehaviour
 
 					if (dist < wayPointActivationDistance) {
 						this.currentWayPoint = wayPoint;
-						if (this.currentWayPoint == this.firstWayPoint) {
+						if (this.currentWayPoint == this.firstWayPoint)
+						{
 							this.laps += 1;
 						}
-						total_driven_distance += dist;
-						// Debug.Log ("Waypoint: " + this.currentWayPoint.name + " distance = " + dist + " tot distance = " + total_driven_distance + " lap number " + this.laps);
+						//  Debug.Log ("Waypoint: " + this.currentWayPoint.name + " distance = " + dist + " lap number " + this.laps);
 					}
 				}
 			}
 			this.timeToGo = Time.fixedTime + updateDelay;
 		}
-			
 	}
 
-	private void detectCrash ()
+	private void detectCrash()
 	{
-		solveLastCrash ();
-		if (carController.CurrentSpeed < 1) {
-
-			timeLeft -= Time.deltaTime;
-
-			if (timeLeft < 0) {
-				registerCrash (carCollider.getLastOBENumber ());
-				timeLeft = 120.0f;
+		solveLastCrash();
+		if (carController.CurrentSpeed < 1)
+		{
+			stuckTimer += 1;
+			if (stuckTimer > 120) // 5 seconds  // 50 for testing
+			{
+				registerCrash(carCollider.getLastOBENumber());
+				stuckTimer = 0;
 			}
-		} else {
-			timeLeft = 120.0f;
 		}
-
-//			stuckTimer += 1;
-//			if (stuckTimer > 120) { // 5 seconds
-//				registerCrash (carCollider.getLastOBENumber ());
-//				stuckTimer = 120.0f;
-//			}
-//		} else {
-//			stuckTimer = 120.0f;
-//		}
+		else
+		{
+			stuckTimer = 0;
+		}
 	}
 
-	private void stopCar ()
+	private void stopCar()
 	{
 		float currentSpeed = this.carController.CurrentSpeed;
 		//		float acc = this.carRemoteControl.Acceleration;
 
-		if (currentSpeed > prevSpeed) {
+		if (currentSpeed > prevSpeed)
+		{
 			decelerationSign = decelerationSign * -1;
 		}
 		this.carRemoteControl.Acceleration = 100 * decelerationSign;
@@ -135,81 +127,69 @@ public class WayPointUpdate : MonoBehaviour
 		}
 	}
 
-	public void registerCollision (int collision_num)
+	public void registerCollision(int collision_num)
 	{
 		this.isCarCrashed = true;
 		this.isCrashedInTheLastSecond = true;
-		this.lastCrash = System.DateTime.Now.ToFileTime ();
+		this.lastCrash = System.DateTime.Now.ToFileTime();
 		this.tot_crashes = collision_num;
 	}
 
-	public void solveCrash ()
+	public void solveCrash()
 	{
 		this.isCarCrashed = false;
-		solveLastCrash ();
+		solveLastCrash();
 	}
 
-	public void solveLastCrash ()
+	public void solveLastCrash()
 	{
-		if (isCarCrashed == false && (System.DateTime.Now.ToFileTime () - this.lastCrash) > 10000000) {
+		if (isCarCrashed == false && (System.DateTime.Now.ToFileTime() - this.lastCrash) > 10000000)
+		{
 			this.isCrashedInTheLastSecond = false;
 		}
 	}
 
-	public bool isCrash ()
+	public bool isCrash()
 	{
 		return this.isCarCrashed;
 	}
 
-	public bool isCrashInTheLastSecond ()
+	public bool isCrashInTheLastSecond()
 	{
 		return this.isCrashedInTheLastSecond;
 	}
 
-	public GameObject getNextWaypoint ()
+	public void moveCarToNextWayPoint()
 	{
-		int currentWayPointNumber = getWayPointNumber (this.currentWayPoint);
+		int currentWayPointNumber = getWayPointNumber(this.currentWayPoint);
 		int nextWayPointNumber = (currentWayPointNumber + 1) % this.numberOfWayPoints;
-		GameObject nextWayPoint = findWayPointByNumber (nextWayPointNumber);
-		return nextWayPoint;
-	}
 
-	public GameObject getPreviousWaypoint ()
-	{
-		int currentWayPointNumber = getWayPointNumber (this.currentWayPoint);
-		int previousWayPointNumber = (currentWayPointNumber - 1) % this.numberOfWayPoints;
-		GameObject previousWayPoint = findWayPointByNumber (previousWayPointNumber);
-		return previousWayPoint;
-	}
-
-	public void moveCarToNextWayPoint ()
-	{
 		// 1. update the wayPoint.
-		GameObject nextWayPoint = getNextWaypoint ();
+		GameObject nextWayPoint = findWayPointByNumber(nextWayPointNumber);
 
 		// 2. move the cat to the wayPoint
 		Vector3 newRotation = nextWayPoint.transform.rotation.eulerAngles;
 		this.transform.position = nextWayPoint.transform.position;
 		this.transform.eulerAngles = newRotation;
-		solveCrash ();
+		solveCrash();
 	}
 
-	public int getCurrentWayPointNmber ()
+	public int getCurrentWayPointNmber()
 	{
-		return getWayPointNumber (this.currentWayPoint);
+		return getWayPointNumber(this.currentWayPoint);
 	}
 
-	public int getTotalWayPointNmber ()
+	public int getTotalWayPointNmber()
 	{
 		return numberOfWayPoints;
 	}
 
-	public int getLapNumber ()
+	public int getLapNumber()
 	{
 		return this.laps;
 	}
 
-	public int getOBENumber ()
+	public int getOBENumber()
 	{
 		return this.tot_obes;
 	}
@@ -229,25 +209,30 @@ public class WayPointUpdate : MonoBehaviour
 		return this.tot_crashes;
 	}
 
-	private int getWayPointNumber (GameObject wayPoint)
+	private int getWayPointNumber(GameObject wayPoint)
 	{
 		string name = wayPoint.name;
 		// stringNumb shape XXX or 001.
-		string stringNumb = name.Substring (name.Length - 3);
-		return int.Parse (stringNumb);
+		string stringNumb = name.Substring(name.Length - 3);
+		return int.Parse(stringNumb);
 	}
 
-	private GameObject findWayPointByNumber (int number)
+	private GameObject findWayPointByNumber(int number)
 	{
 		string suffix = "";
-		if (number < 10) {
+		if (number < 10)
+		{
 			suffix = "00" + number;
-		} else if (number < 100) {
+		}
+		else if (number < 100)
+		{
 			suffix = "0" + number;
-		} else {
+		}
+		else
+		{
 			suffix += number;
 		}
 		string wayPointName = "Waypoint " + suffix;
-		return GameObject.Find (wayPointName);
+		return GameObject.Find(wayPointName);
 	}
 }
