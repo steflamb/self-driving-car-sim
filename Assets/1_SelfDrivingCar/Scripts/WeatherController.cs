@@ -4,25 +4,37 @@ using UnityStandardAssets.Vehicles.Car;
 using UnityEngine.SceneManagement;
 
 
+public enum EmissionType
+{
+	CONSTANT,
+	DYNAMIC,
+	FOCUSED
+}
+
 public class WeatherController : MonoBehaviour
 {
-	static private string weather = "Sun";
-
 	public CarController carController;
+
+	static private string weather = "Sun";
 	public ParticleSystem rain;
 	public ParticleSystem snow;
 	public ParticleSystem fog;
 	public Light sun;
 
-	// CHANGE THE TOTAL TIME CYCLE OF THE EFFECT
+	// how long the dynamic emission type lasts between the min-max value
 	private float cycleTimeInSeconds = 60;
 
-	public int maxRainEmitionRate = 10000;
-	public int minRainEmitionRate = 100;
-	public int maxFogEmitionRate = 5000;
-	public int minFogEmitionRate = 100;
-	public int maxSnowEmitionRate = 800;
-	public int minSnowEmitionRate = 100;
+	// defaults for the dynamic emission type
+	public int maxRainEmissionRate = 10000;
+	public int minRainEmissionRate = 0; // was 100 in ICSE
+	public int maxFogEmissionRate = 5000;
+	public int minFogEmissionRate = 0; // was 100 in ICSE
+	public int maxSnowEmissionRate = 800;
+	public int minSnowEmissionRate = 0; // was 100 in ICSE
+
+	public static EmissionType emissionType;
+	public static int constantEmissionRate;
+
 	private float startTime;
 	private float timePassedInSeconds;
 	private Vector3 snowOffset;
@@ -32,13 +44,12 @@ public class WeatherController : MonoBehaviour
 
 	public WeatherController ()
 	{
-		
 	}
 
 	void Start ()
 	{
 		startTime = Time.time;
-		//Debug.Log(weather);
+
 		if (weather.Equals ("Rain")) {
 			rain.gameObject.SetActive (true);
 			snow.gameObject.SetActive (false);
@@ -62,9 +73,11 @@ public class WeatherController : MonoBehaviour
 		}
 	}
 
-	public static void setWeather (String weatherCondiction)
+	public static void setWeather (String weatherCondition, String emType, int emissionRate)
 	{
-		weather = weatherCondiction;
+		weather = weatherCondition;
+		emissionType = emType == "Constant" ? EmissionType.CONSTANT : EmissionType.DYNAMIC;
+		constantEmissionRate = emissionRate;
 	}
 
 	public static float getEmissionRate ()
@@ -94,14 +107,32 @@ public class WeatherController : MonoBehaviour
 		timePassedInSeconds = Time.time - startTime;
 		float timePassedInSecondsCycle = timePassedInSeconds % cycleTimeInSeconds;
 
-		if (weather.Equals ("Rain")) {
-			changeEmissionIntensity (rain, timePassedInSecondsCycle, minRainEmitionRate, maxRainEmitionRate);
-		} else if (weather.Equals ("Fog")) {
-			changeEmissionIntensity (fog, timePassedInSecondsCycle, minFogEmitionRate, maxFogEmitionRate);
-		} else if (weather.Equals ("Snow")) {
-			changeEmissionIntensity (snow, timePassedInSecondsCycle, minSnowEmitionRate, maxSnowEmitionRate);
-			moveEffect (snow.gameObject, carController.gameObject, snowOffset);
+		if (emissionType == EmissionType.CONSTANT) {
+
+			if (weather.Equals ("Rain")) {
+				setStaticEmissionIntensity (rain, constantEmissionRate, minRainEmissionRate, maxRainEmissionRate);
+			} else if (weather.Equals ("Fog")) {
+				setStaticEmissionIntensity (fog, constantEmissionRate, minFogEmissionRate, maxFogEmissionRate);
+			} else if (weather.Equals ("Snow")) {
+				setStaticEmissionIntensity (snow, constantEmissionRate, minSnowEmissionRate, maxSnowEmissionRate);
+				moveEffect (snow.gameObject, carController.gameObject, snowOffset);
+			}
+
+		} else if (emissionType == EmissionType.DYNAMIC) {
+			
+			if (weather.Equals ("Rain")) {
+				changeEmissionIntensity (rain, timePassedInSecondsCycle, minRainEmissionRate, maxRainEmissionRate);
+			} else if (weather.Equals ("Fog")) {
+				changeEmissionIntensity (fog, timePassedInSecondsCycle, minFogEmissionRate, maxFogEmissionRate);
+			} else if (weather.Equals ("Snow")) {
+				changeEmissionIntensity (snow, timePassedInSecondsCycle, minSnowEmissionRate, maxSnowEmissionRate);
+				moveEffect (snow.gameObject, carController.gameObject, snowOffset);
+			}
+
+		} else if (emissionType == EmissionType.FOCUSED) {
+			Debug.Log ("EmissionType.FOCUSED not implemented yet.");
 		}
+
 	}
 
 	private void moveEffect (GameObject effect, GameObject target, Vector3 offset)
@@ -135,8 +166,23 @@ public class WeatherController : MonoBehaviour
 		// set the object's field
 		emissionRate = rate;
 		emissionRatePercentage = rate / maxEmitionRate;
-		//Debug.Log (emissionRatePercentage);
+		// Debug.Log ("emissionRate: " + emissionRate);
+		// Debug.Log ("emissionRatePercentage: " + emissionRatePercentage);
 
+	}
+
+	private void setStaticEmissionIntensity (ParticleSystem weatherEffect, int emRate, int minEmRate, int maxEmRate)
+	{
+		var emission = weatherEffect.emission;
+		var actualRate = (emRate * (maxEmRate - minEmRate) / 100) + minEmRate; 
+		emission.rateOverTime = actualRate;
+
+		// set the object's field
+		emissionRate = actualRate;
+		emissionRatePercentage = actualRate / maxEmRate * 100;
+//		Debug.Log ("actualRate: " + actualRate);
+//		Debug.Log ("emissionRatePercentage: " + emissionRatePercentage);
+	
 	}
 
 }

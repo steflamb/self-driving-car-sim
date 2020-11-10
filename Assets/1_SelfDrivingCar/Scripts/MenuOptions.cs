@@ -5,9 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class MenuOptions : MonoBehaviour
 {
+	private string[] trackNames = new string[]{ "LakeTrack", "JungleTrack", "MountainTrack" };
 	private int trackIndex = 0;
 	private Outline[] outlines;
-	private string[] trackNames = new string[]{ "LakeTrack", "JungleTrack", "MountainTrack" };
 
 	private string[] trackDayOrNight = new string[]{ "Day", "DayNightCycle" };
 	private int trackTimeIndex = 0;
@@ -17,8 +17,18 @@ public class MenuOptions : MonoBehaviour
 	private int augmentationIndex = 0;
 	private Outline[] augmentationOutlines;
 
+	private string[] emissionTypeNames = new string[]{ "Constant", "Dynamic" };
+	private int emissionTypeIndex = 0;
+	private Outline[] emissionTypeOutlines;
+	private int constEmissionRate = 10; // default value for the GUI
+
+	void Update ()
+	{
+	}
+
 	public void Start ()
 	{
+		// setup tracks
 		GameObject[] tracks = GameObject.FindGameObjectsWithTag ("Tracks");
 		this.outlines = new Outline[tracks.Length];
 		for (int i = 0; i < tracks.Length; i++) {
@@ -34,8 +44,7 @@ public class MenuOptions : MonoBehaviour
 		if (outlines.Length > 0) {
 			outlines [0].effectColor = new Color (0, 0, 0);
 		}
-
-
+			
 		// setup day night
 		GameObject[] dayNight = GameObject.FindGameObjectsWithTag ("TimeOfDay");
 		this.dayTimeOutlines = new Outline[dayNight.Length];
@@ -51,7 +60,7 @@ public class MenuOptions : MonoBehaviour
 			dayTimeOutlines [0].effectColor = new Color (0, 0, 0);
 		}
 
-		//setup augmentations
+		// setup augmentations
 		GameObject[] augmentations = GameObject.FindGameObjectsWithTag ("Augmentation");
 		this.augmentationOutlines = new Outline[augmentations.Length];
 		for (int i = 0; i < augmentations.Length; i++) {
@@ -70,6 +79,22 @@ public class MenuOptions : MonoBehaviour
 			augmentationOutlines [0].effectColor = new Color (0, 0, 0);
 		}
 
+		// setup emission rate
+		GameObject[] emissionTypes = GameObject.FindGameObjectsWithTag ("EmissionRate");
+		this.emissionTypeOutlines = new Outline[emissionTypes.Length];
+		for (int i = 0; i < emissionTypes.Length; i++) {
+			Outline emissionType = emissionTypes [i].GetComponent<Outline> ();
+			if (emissionType.name == "Constant") {
+				emissionTypeOutlines [0] = emissionType;
+				constEmissionRate = EmissionRateController.getSliderValue ();
+			} else if (emissionType.name == "Dynamic") {
+				emissionTypeOutlines [1] = emissionType;
+			}
+		}
+		if (emissionTypeOutlines.Length > 0) {
+			emissionTypeOutlines [0].effectColor = new Color (0, 0, 0);
+			emissionTypeOutlines [1].effectColor = new Color (255, 255, 255);
+		}
 	}
 
 	public void ControlMenu ()
@@ -79,26 +104,30 @@ public class MenuOptions : MonoBehaviour
 
 	public void MainMenu ()
 	{
-		//Debug.Log ("go to main menu");
 		SceneManager.LoadScene ("MenuScene");
 	}
 
 	public void StartDrivingMode ()
 	{
-		WeatherController.setWeather (augmentationNames [augmentationIndex]);
+		constEmissionRate = EmissionRateController.getSliderValue ();
+//		Debug.Log ("constEmissionRate: " + constEmissionRate);
+
+		WeatherController.setWeather (augmentationNames [augmentationIndex], emissionTypeNames [emissionTypeIndex], constEmissionRate);
 		SceneManager.LoadScene (trackNames [trackIndex] + "Training" + trackDayOrNight [trackTimeIndex]);
 		
 	}
 
 	public void StartAutonomousMode ()
 	{
-		WeatherController.setWeather (augmentationNames [augmentationIndex]);
+		constEmissionRate = EmissionRateController.getSliderValue ();
+//		Debug.Log ("constEmissionRate: " + constEmissionRate);
+
+		WeatherController.setWeather (augmentationNames [augmentationIndex], emissionTypeNames [emissionTypeIndex], constEmissionRate);
 		SceneManager.LoadScene (trackNames [trackIndex] + "Autonomous" + trackDayOrNight [trackTimeIndex]);
 	}
 
 	public void SetLakeTrack ()
 	{
-		
 		trackIndex = 0;
 		outlines [1].effectColor = new Color (255, 255, 255);
 		outlines [2].effectColor = new Color (255, 255, 255);
@@ -144,7 +173,8 @@ public class MenuOptions : MonoBehaviour
 		augmentationOutlines [3].effectColor = new Color (255, 255, 255);
 	}
 
-	public void setReinyAugmentation(){
+	public void setReinyAugmentation ()
+	{
 		augmentationIndex = 1;
 		augmentationOutlines [1].effectColor = new Color (0, 0, 0);
 		augmentationOutlines [0].effectColor = new Color (255, 255, 255);
@@ -168,6 +198,20 @@ public class MenuOptions : MonoBehaviour
 		augmentationOutlines [0].effectColor = new Color (255, 255, 255);
 		augmentationOutlines [1].effectColor = new Color (255, 255, 255);
 		augmentationOutlines [2].effectColor = new Color (255, 255, 255);
+	}
+
+	public void setConstantEmissionRate ()
+	{
+		emissionTypeIndex = 0;
+		emissionTypeOutlines [0].effectColor = new Color (0, 0, 0);
+		emissionTypeOutlines [1].effectColor = new Color (255, 255, 255);
+	}
+
+	public void setDynamicEmissionRate ()
+	{
+		emissionTypeIndex = 1;
+		emissionTypeOutlines [1].effectColor = new Color (0, 0, 0);
+		emissionTypeOutlines [0].effectColor = new Color (255, 255, 255);
 	}
 	
 }

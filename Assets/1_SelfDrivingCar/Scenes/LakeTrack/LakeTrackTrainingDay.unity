@@ -439,7 +439,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -1406138216
+  randomSeed: -1896607043
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -4388,7 +4388,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 252181946}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c508c550e22b41d9b20e1b317da77e4, type: 3}
   m_Name: 
@@ -8769,12 +8769,12 @@ MonoBehaviour:
   snow: {fileID: 2072804037}
   fog: {fileID: 84647738}
   sun: {fileID: 428566102}
-  maxRainEmitionRate: 10000
-  minRainEmitionRate: 100
-  maxFogEmitionRate: 2000
-  minFogEmitionRate: 100
-  maxSnowEmitionRate: 800
-  minSnowEmitionRate: 100
+  maxRainEmissionRate: 10000
+  minRainEmissionRate: 0
+  maxFogEmissionRate: 5000
+  minFogEmissionRate: 0
+  maxSnowEmissionRate: 800
+  minSnowEmissionRate: 0
 --- !u!4 &859559887
 Transform:
   m_ObjectHideFlags: 0
@@ -15810,7 +15810,7 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -1804686923
+  randomSeed: 1799243160
   InitialModule:
     serializedVersion: 3
     enabled: 1
