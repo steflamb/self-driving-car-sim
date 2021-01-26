@@ -72,6 +72,9 @@ public class CommandServer : MonoBehaviour
 		CarRemoteControl.Loss = float.Parse (jsonObject.GetField ("loss").str);
 		CarRemoteControl.MaxLaps = int.Parse (jsonObject.GetField ("max_laps").str);
 
+		// new fields for JSEP '21
+		CarRemoteControl.Uncertainty = float.Parse (jsonObject.GetField ("uncertainty").str);
+
 		// new fields
 		//CarRemoteControl.Brake = float.Parse (jsonObject.GetField ("brake").str);
 		//CarRemoteControl.Intensity = int.Parse (jsonObject.GetField ("intensity").str);
@@ -81,7 +84,6 @@ public class CommandServer : MonoBehaviour
 
 	void EmitTelemetry (SocketIOEvent obj)
 	{
-		DateTime actualTime;
 
 		UnityMainThreadDispatcher.Instance ().Enqueue (() => {
 			// send only if it's not being manually driven
@@ -103,7 +105,7 @@ public class CommandServer : MonoBehaviour
 
 				if (_wayPointUpdate != null) {
 					data ["lapNumber"] = _wayPointUpdate.getLapNumber ().ToString ();
-					data ["currentWayPoint"] = _wayPointUpdate.getCurrentWayPointNmber ().ToString ();
+					data ["currentWayPoint"] = _wayPointUpdate.getCurrentWayPointNumber ().ToString ();
 					data ["crash"] = _wayPointUpdate.isCrashInTheLastSecond () ? "1" : "0";
 					data ["tot_obes"] = _wayPointUpdate.getOBENumber ().ToString ();
 					data ["tot_crashes"] = _wayPointUpdate.getCrashNumber ().ToString ();

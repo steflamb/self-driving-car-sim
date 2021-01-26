@@ -174,7 +174,7 @@ public class WayPointUpdate : MonoBehaviour
 		solveCrash();
 	}
 
-	public int getCurrentWayPointNmber()
+	public int getCurrentWayPointNumber()
 	{
 		return getWayPointNumber(this.currentWayPoint);
 	}

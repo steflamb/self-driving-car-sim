@@ -27,8 +27,8 @@ public class UISystem : MonoSingleton<UISystem>
 	public Text LapNumber_Text;
 	public Text SectorNumber_Text;
 
-	public Text Confidence_Text;
-	public Text Loss_Text;
+	public Text Text_Loss_Value;
+	public Text Text_Unc_Value;
 
 	public Text CTE_Text;
 	public Text CTE_Value_Text;
@@ -67,12 +67,17 @@ public class UISystem : MonoSingleton<UISystem>
 
 	public void SetLossValue (float value)
 	{
-		this.Loss_Text.text = value.ToString ("#0.0000");
+		this.Text_Loss_Value.text = value.ToString ("#000.00");
 	}
 
 	public void SetCTEValue (float value)
 	{
 		this.CTE_Value_Text.text = value.ToString ("#0.0000");
+	}
+
+	public void SetUncertaintyValue (float value)
+	{
+		this.Text_Unc_Value.text = value.ToString ("#0.0000000000");
 	}
 
 	public void SetLapNumber (int value)
@@ -87,8 +92,7 @@ public class UISystem : MonoSingleton<UISystem>
 
 	public void SetConfidenceColor (Color color)
 	{
-		Confidence_Text.color = color;
-		Loss_Text.color = color;
+		this.Text_Loss_Value.color = color;
 	}
 
 	public void SetAngleValue (float value)
@@ -132,7 +136,7 @@ public class UISystem : MonoSingleton<UISystem>
 
 		if (!isTraining) {
 			SetLapNumber (wayPointUpdate.getLapNumber ());
-			SetSectorNumber (wayPointUpdate.getCurrentWayPointNmber (), wayPointUpdate.getTotalWayPointNmber () - 1);
+			SetSectorNumber (wayPointUpdate.getCurrentWayPointNumber (), wayPointUpdate.getTotalWayPointNmber () - 1);
 
 			if (carRemoteControl.Confidence == -1) {
 				SetConfidenceColor (Color.red);
@@ -143,6 +147,7 @@ public class UISystem : MonoSingleton<UISystem>
 			}
 
 			SetLossValue (carRemoteControl.Loss);
+			SetUncertaintyValue (carRemoteControl.Uncertainty);
 
 		} else {
 //			SetLapNumber(wayPointManager.getLapNumber());
