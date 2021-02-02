@@ -22,10 +22,10 @@ public class WeatherController : MonoBehaviour
 	public Light sun;
 
 	// how long the dynamic emission type lasts between the min-max value
-	private float cycleTimeInSeconds = 60;
+	private float cycleTimeInSeconds = 30;
 
 	// defaults for the dynamic emission type
-	public int maxRainEmissionRate = 10000;
+	public int maxRainEmissionRate = 50000;
 	public int minRainEmissionRate = 0; // was 100 in ICSE
 	public int maxFogEmissionRate = 5000;
 	public int minFogEmissionRate = 0; // was 100 in ICSE

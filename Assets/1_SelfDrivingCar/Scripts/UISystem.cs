@@ -29,8 +29,6 @@ public class UISystem : MonoSingleton<UISystem>
 
 	public Text Text_Loss_Value;
 	public Text Text_Unc_Value;
-
-	public Text CTE_Text;
 	public Text CTE_Value_Text;
 
 	public GameObject RecordingPause;
