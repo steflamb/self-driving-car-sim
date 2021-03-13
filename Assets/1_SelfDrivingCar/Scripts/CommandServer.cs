@@ -75,6 +75,7 @@ public class CommandServer : MonoBehaviour
 		// new fields for JSEP '21
 		CarRemoteControl.Uncertainty = float.Parse (jsonObject.GetField ("uncertainty").str);
 
+
 		// new fields
 		//CarRemoteControl.Brake = float.Parse (jsonObject.GetField ("brake").str);
 		//CarRemoteControl.Intensity = int.Parse (jsonObject.GetField ("intensity").str);

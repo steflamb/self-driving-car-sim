@@ -31,6 +31,8 @@ public class UISystem : MonoSingleton<UISystem>
 	public Text Text_Unc_Value;
 	public Text CTE_Value_Text;
 
+	public Text OOT;
+
 	public GameObject RecordingPause;
 	public GameObject RecordDisabled;
 	public bool isTraining = false;
@@ -56,7 +58,7 @@ public class UISystem : MonoSingleton<UISystem>
 		SetLapNumber (1);
 
 		if (!isTraining) {
-			DriveStatus_Text.text = "Mode: Autonomous";
+			DriveStatus_Text.text = "Autonomous";
 			RecordDisabled.SetActive (true);
 			RecordStatus_Text.text = "";
 			SetConfidenceColor (Color.green);
@@ -66,6 +68,11 @@ public class UISystem : MonoSingleton<UISystem>
 	public void SetLossValue (float value)
 	{
 		this.Text_Loss_Value.text = value.ToString ("#000.00");
+	}
+
+	public void SetOutOfTrackValue(int value)
+	{
+		this.OOT.text = value.ToString("#0");
 	}
 
 	public void SetCTEValue (float value)
@@ -85,7 +92,7 @@ public class UISystem : MonoSingleton<UISystem>
 
 	public void SetSectorNumber (int value, int totalSectors)
 	{
-		this.SectorNumber_Text.text = value.ToString () + " of " + totalSectors.ToString ();
+		this.SectorNumber_Text.text = value.ToString () + " / " + totalSectors.ToString ();
 	}
 
 	public void SetConfidenceColor (Color color)
@@ -136,7 +143,8 @@ public class UISystem : MonoSingleton<UISystem>
 			SetLapNumber (wayPointUpdate.getLapNumber ());
 			SetSectorNumber (wayPointUpdate.getCurrentWayPointNumber (), wayPointUpdate.getTotalWayPointNmber () - 1);
 
-			if (carRemoteControl.Confidence == -1) {
+            if (carRemoteControl.Confidence == -1)
+            {
 				SetConfidenceColor (Color.red);
 			} else if (carRemoteControl.Confidence == 0) {
 				SetConfidenceColor (Color.yellow);
@@ -146,10 +154,13 @@ public class UISystem : MonoSingleton<UISystem>
 
 			SetLossValue (carRemoteControl.Loss);
 			SetUncertaintyValue (carRemoteControl.Uncertainty);
+			SetOutOfTrackValue(wayPointUpdate.getOBENumber());
 
 		} else {
-//			SetLapNumber(wayPointManager.getLapNumber());
-//			SetSectorNumber(wayPointManager.getCurrentWayPointNumber(), wayPointManager.getTotalWayPointNumber() - 1);
+			SetLapNumber(wayPointUpdate.getLapNumber());
+			SetSectorNumber(wayPointUpdate.getCurrentWayPointNumber(), wayPointUpdate.getTotalWayPointNmber() - 1);
+			DriveStatus_Text.color = Color.white;
+			DriveStatus_Text.text = "Manual";
 		}
 	}
 
@@ -178,10 +189,10 @@ public class UISystem : MonoSingleton<UISystem>
 		if (!isTraining) {
 			if ((Input.GetKey (KeyCode.W)) || (Input.GetKey (KeyCode.S))) {
 				DriveStatus_Text.color = Color.red;
-				DriveStatus_Text.text = "Mode: Manual";
+				DriveStatus_Text.text = "Manual";
 			} else {
 				DriveStatus_Text.color = Color.white;
-				DriveStatus_Text.text = "Mode: Autonomous";
+				DriveStatus_Text.text = "Autonomous";
 			}
 		}
 
