@@ -15589,7 +15589,7 @@ PrefabInstance:
     - target: {fileID: 198000013866684486, guid: d0c0b49979d372942ae5a964d9364111,
         type: 3}
       propertyPath: randomSeed
-      value: -1355372041
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 198000013866684486, guid: d0c0b49979d372942ae5a964d9364111,
         type: 3}
@@ -15634,7 +15634,7 @@ PrefabInstance:
     - target: {fileID: 198000013866684486, guid: d0c0b49979d372942ae5a964d9364111,
         type: 3}
       propertyPath: ShapeModule.type
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 198000013866684486, guid: d0c0b49979d372942ae5a964d9364111,
         type: 3}
@@ -15654,7 +15654,17 @@ PrefabInstance:
     - target: {fileID: 198000013866684486, guid: d0c0b49979d372942ae5a964d9364111,
         type: 3}
       propertyPath: ShapeModule.radiusThickness
-      value: 1.0000
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 198000013866684486, guid: d0c0b49979d372942ae5a964d9364111,
+        type: 3}
+      propertyPath: UVModule.flipU
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 198000013866684486, guid: d0c0b49979d372942ae5a964d9364111,
+        type: 3}
+      propertyPath: UVModule.flipV
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 198000014279566986, guid: d0c0b49979d372942ae5a964d9364111,
         type: 3}
