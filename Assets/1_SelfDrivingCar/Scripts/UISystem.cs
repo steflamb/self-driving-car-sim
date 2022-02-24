@@ -56,6 +56,7 @@ public class UISystem : MonoSingleton<UISystem>
 		SetAngleValue (0);
 		SetMPHValue (0);
 		SetLapNumber (1);
+		//SetSectorNumber(0, 0);
 
 		if (!isTraining) {
 			DriveStatus_Text.text = "Autonomous";
@@ -156,13 +157,15 @@ public class UISystem : MonoSingleton<UISystem>
 			SetUncertaintyValue (carRemoteControl.Uncertainty);
 			SetOutOfTrackValue(wayPointUpdate.getOBENumber());
 
-		} else {
-			SetLapNumber(wayPointUpdate.getLapNumber());
-			SetSectorNumber(wayPointUpdate.getCurrentWayPointNumber(), wayPointUpdate.getTotalWayPointNmber() - 1);
-			DriveStatus_Text.color = Color.white;
-			DriveStatus_Text.text = "Manual";
 		}
-	}
+
+		SetLapNumber(wayPointManager.getLapNumber());
+        SetSectorNumber(wayPointManager.getCurrentWayPointNumber(), wayPointManager.getTotalWayPointNumber() - 1);
+
+        DriveStatus_Text.color = Color.white;
+        DriveStatus_Text.text = "Manual";
+        
+    }
 
 	// Update is called once per frame
 	void Update ()
@@ -200,10 +203,6 @@ public class UISystem : MonoSingleton<UISystem>
 			// Do Menu Here
 			SceneManager.LoadScene ("MenuScene");
 		}
-
-//		if (Input.GetKeyDown (KeyCode.Return)) {
-//			// Do Console Here
-//		}
 
 		UpdateCarValues ();
 	}
