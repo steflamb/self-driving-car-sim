@@ -55,14 +55,11 @@ public class WayPointUpdate : MonoBehaviour
 		bool stuck = false;
 		bool outs = false;
 
-		if (getWayPointNumber(this.currentWayPoint) > 1)
-		{
-			// TODO: when the car gets stuck, crash is not registered
-			stuck = detectCarIsStuck();
+		// TODO: when the car gets stuck, crash is not registered
+		stuck = detectCarIsStuck();
 
-			// seems to work, needs more testing
-			outs = detectCarIsOutOfTrack();
-		}
+		// seems to work, needs more testing
+		outs = detectCarIsOutOfTrack();
 
 		//if (this.isCrash ()) {
 		if (stuck || outs) {
@@ -130,8 +127,8 @@ public class WayPointUpdate : MonoBehaviour
 			stuckTimer += 1;
 			if (stuckTimer > 120) // 5 seconds  // 50 for testing
 			{
-				//this.isCarCrashed = true;
-				//this.isCrashedInTheLastSecond = true;
+				this.isCarCrashed = true;
+                this.isCrashedInTheLastSecond = true;
 				registerCrash(carCollider.getLastOBENumber() + 1);
 				stuckTimer = 0;
 			}
@@ -139,7 +136,8 @@ public class WayPointUpdate : MonoBehaviour
 		}
 		else
 		{
-			//this.isCarCrashed = false;
+			this.isCarCrashed = false;
+			this.isCrashedInTheLastSecond = false;
 			stuckTimer = 0;
 			return false;
 		}
