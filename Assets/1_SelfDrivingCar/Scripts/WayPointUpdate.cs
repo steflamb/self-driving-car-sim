@@ -30,6 +30,8 @@ public class WayPointUpdate : MonoBehaviour
 	private float total_driven_distance = 0.0f;
 	private float angular_difference = 0.0f;
 
+	public WaypointTracker_pid waypointTracker_pid;
+
 	// Use this for initialization
 	void Start ()
 	{
@@ -43,21 +45,38 @@ public class WayPointUpdate : MonoBehaviour
 		carController = GetComponent<CarController> ();
 		carCollider = GetComponent<CarCollider> ();
 		this.timeToGo = Time.fixedTime + updateDelay;
+
+		waypointTracker_pid = new WaypointTracker_pid();
 	}
 
 	// Update is called once per frame, update the waypoint 5 times per second.
 	void Update ()
 	{
-		detectCrash ();
-		if (this.isCrash ()) {
-			if (carController.CurrentSpeed > 0.5) {
-				stopCar ();
-			} else {
-				this.carRemoteControl.Acceleration = 0;
-				moveCarToNextWayPoint ();
-			}
-			return;
+		bool stuck = false;
+		bool outs = false;
+
+		if (getWayPointNumber(this.currentWayPoint) > 1)
+		{
+			// TODO: when the car gets stuck, crash is not registered
+			stuck = detectCarIsStuck();
+
+			// seems to work, needs more testing
+			outs = detectCarIsOutOfTrack();
 		}
+
+		//if (this.isCrash ()) {
+		if (stuck || outs) {
+            if (carController.CurrentSpeed > 1)
+            {
+                stopCar();
+            }
+            else
+            {
+                this.carRemoteControl.Acceleration = 0;
+                moveCarToNextWayPoint();
+            }
+            return;
+        }
 
 		if (Time.fixedTime >= timeToGo) {
 			foreach (GameObject wayPoint in this.waypoints) {
@@ -84,7 +103,26 @@ public class WayPointUpdate : MonoBehaviour
 		}
 	}
 
-	private void detectCrash()
+	private bool detectCarIsOutOfTrack()
+    {
+		float cte = waypointTracker_pid.CrossTrackError(carController);
+        solveLastCrash();
+
+		if (Mathf.Abs(cte) > 7)
+        {
+			// add the obe manually cause we are outside the carCollider
+			registerCrash(carCollider.getLastOBENumber() + 1);
+			this.isCarCrashed = true;
+			return true;
+		}
+		else
+        {
+			this.isCarCrashed = false;
+			return false;
+		}
+	}
+
+	private bool detectCarIsStuck()
 	{
 		solveLastCrash();
 		if (carController.CurrentSpeed < 1)
@@ -92,20 +130,24 @@ public class WayPointUpdate : MonoBehaviour
 			stuckTimer += 1;
 			if (stuckTimer > 120) // 5 seconds  // 50 for testing
 			{
-				registerCrash(carCollider.getLastOBENumber());
+				//this.isCarCrashed = true;
+				//this.isCrashedInTheLastSecond = true;
+				registerCrash(carCollider.getLastOBENumber() + 1);
 				stuckTimer = 0;
 			}
+			return true;
 		}
 		else
 		{
+			//this.isCarCrashed = false;
 			stuckTimer = 0;
+			return false;
 		}
 	}
 
 	private void stopCar()
 	{
 		float currentSpeed = this.carController.CurrentSpeed;
-		//		float acc = this.carRemoteControl.Acceleration;
 
 		if (currentSpeed > prevSpeed)
 		{
@@ -118,8 +160,8 @@ public class WayPointUpdate : MonoBehaviour
 	// this is actually OBE
 	public void registerCrash (int obe_num)
 	{
-		// TODO: fixes erroneous OBE when the simulation starts. Find a better way.
-		if (getWayPointNumber (this.currentWayPoint) > 1) {
+        // TODO: fixes erroneous OBE when the simulation starts. Find a better way.
+        if (getWayPointNumber (this.currentWayPoint) > 1) {
 			this.isCarCrashed = true;
 			this.isCrashedInTheLastSecond = true;
 			this.lastCrash = System.DateTime.Now.ToFileTime ();
