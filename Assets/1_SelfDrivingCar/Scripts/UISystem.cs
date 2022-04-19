@@ -158,13 +158,15 @@ public class UISystem : MonoSingleton<UISystem>
 			SetOutOfTrackValue(wayPointUpdate.getOBENumber());
 
 		}
+		else
+        {
+			SetLapNumber(wayPointManager.getLapNumber());
+			SetSectorNumber(wayPointManager.getCurrentWayPointNumber(), wayPointManager.getTotalWayPointNumber() - 1);
 
-		SetLapNumber(wayPointManager.getLapNumber());
-        SetSectorNumber(wayPointManager.getCurrentWayPointNumber(), wayPointManager.getTotalWayPointNumber() - 1);
+			DriveStatus_Text.color = Color.white;
+			DriveStatus_Text.text = "Manual";
+		}
 
-        DriveStatus_Text.color = Color.white;
-        DriveStatus_Text.text = "Manual";
-        
     }
 
 	// Update is called once per frame
