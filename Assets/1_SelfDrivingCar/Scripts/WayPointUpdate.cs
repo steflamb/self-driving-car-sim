@@ -55,11 +55,14 @@ public class WayPointUpdate : MonoBehaviour
 		bool stuck = false;
 		bool outs = false;
 
-		// TODO: when the car gets stuck, crash is not registered
-		stuck = detectCarIsStuck();
+		if (getWayPointNumber(this.currentWayPoint) > 1)
+		{
+			// TODO: when the car gets stuck, crash is not registered
+			stuck = detectCarIsStuck();
 
-		// seems to work, needs more testing
-		outs = detectCarIsOutOfTrack();
+			// seems to work, needs more testing
+			outs = detectCarIsOutOfTrack();
+		}
 
 		//if (this.isCrash ()) {
 		if (stuck || outs) {
