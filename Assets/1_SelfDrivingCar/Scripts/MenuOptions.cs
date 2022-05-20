@@ -126,6 +126,11 @@ public class MenuOptions : MonoBehaviour
 		SceneManager.LoadScene (trackNames [trackIndex] + "Autonomous" + trackDayOrNight [trackTimeIndex]);
 	}
 
+	public void StartGeneratedTrack()
+	{
+		SceneManager.LoadScene("GeneratedTrack");
+	}
+
 	public void SetLakeTrack ()
 	{
 		trackIndex = 0;
