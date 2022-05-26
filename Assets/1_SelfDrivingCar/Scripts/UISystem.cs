@@ -66,6 +66,7 @@ public class UISystem : MonoSingleton<UISystem>
 		}
 	}
 
+
 	public void SetLossValue (float value)
 	{
 		this.Text_Loss_Value.text = value.ToString ("#000.00");

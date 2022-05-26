@@ -35,73 +35,82 @@ public class WayPointUpdate : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		// find all view points. set up object fields
-		this.waypoints = GameObject.FindGameObjectsWithTag ("Waypoint");
-		this.numberOfWayPoints = this.waypoints.Length;
-		this.firstWayPoint = findWayPointByNumber (0);
-		this.laps = 1;
-		this.currentWayPoint = firstWayPoint;
-		carRemoteControl = GetComponent<CarRemoteControl> ();
-		carController = GetComponent<CarController> ();
-		carCollider = GetComponent<CarCollider> ();
-		this.timeToGo = Time.fixedTime + updateDelay;
+        // find all view points. set up object fields
+        this.waypoints = GameObject.FindGameObjectsWithTag("Waypoint");
+        this.numberOfWayPoints = this.waypoints.Length;
+        this.firstWayPoint = findWayPointByNumber(0);
+        this.laps = 1;
+        this.currentWayPoint = firstWayPoint;
+        carRemoteControl = GetComponent<CarRemoteControl>();
+        carController = GetComponent<CarController>();
+        carCollider = GetComponent<CarCollider>();
+        this.timeToGo = Time.fixedTime + updateDelay;
 
-		waypointTracker_pid = new WaypointTracker_pid();
-	}
+        waypointTracker_pid = new WaypointTracker_pid();
+    }
 
 	// Update is called once per frame, update the waypoint 5 times per second.
 	void Update ()
 	{
-		bool stuck = false;
-		bool outs = false;
+        if (this.currentWayPoint != null)
+        {
+            bool stuck = false;
+			bool outs = false;
 
-		if (getWayPointNumber(this.currentWayPoint) > 1)
-		{
-			// TODO: when the car gets stuck, crash is not registered
-			stuck = detectCarIsStuck();
+			if (getWayPointNumber(this.currentWayPoint) > 1)
+			{
+				// TODO: when the car gets stuck, crash is not registered
+				stuck = detectCarIsStuck();
 
-			// seems to work, needs more testing
-			outs = detectCarIsOutOfTrack();
-		}
+				// seems to work, needs more testing
+				outs = detectCarIsOutOfTrack();
+			}
 
-		//if (this.isCrash ()) {
-		if (stuck || outs) {
-            if (carController.CurrentSpeed > 1)
-            {
-                stopCar();
-            }
-            else
-            {
-                this.carRemoteControl.Acceleration = 0;
-                moveCarToNextWayPoint();
-            }
-            return;
-        }
+			//if (this.isCrash ()) {
+			if (stuck || outs)
+			{
+				if (carController.CurrentSpeed > 1)
+				{
+					stopCar();
+				}
+				else
+				{
+					this.carRemoteControl.Acceleration = 0;
+					moveCarToNextWayPoint();
+				}
 
-		if (Time.fixedTime >= timeToGo) {
-			foreach (GameObject wayPoint in this.waypoints) {
-				if (getWayPointNumber (wayPoint) == (getWayPointNumber (currentWayPoint) + 1) % numberOfWayPoints) {
+				return;
+			}
 
-					// distance between can and next waypoint
-					float dist = Vector3.Distance (this.transform.position, wayPoint.transform.position);
+			if (Time.fixedTime >= timeToGo)
+			{
+				foreach (GameObject wayPoint in this.waypoints)
+				{
+					if (getWayPointNumber(wayPoint) == (getWayPointNumber(currentWayPoint) + 1) % numberOfWayPoints)
+					{
 
-					// angular difference
-					Vector3 targetDir = wayPoint.transform.position - this.transform.position;
-					this.angular_difference = Vector3.Angle(targetDir, transform.forward);
+						// distance between car and next waypoint
+						float dist = Vector3.Distance(this.transform.position, wayPoint.transform.position);
 
-					if (dist < wayPointActivationDistance) {
-						this.currentWayPoint = wayPoint;
-						if (this.currentWayPoint == this.firstWayPoint)
+                        // angular difference
+                        Vector3 targetDir = wayPoint.transform.position - this.transform.position;
+						this.angular_difference = Vector3.Angle(targetDir, transform.forward);
+
+						if (dist < wayPointActivationDistance)
 						{
-							this.laps += 1;
+							this.currentWayPoint = wayPoint;
+							if (this.currentWayPoint == this.firstWayPoint)
+							{
+								this.laps += 1;
+							}
+							Debug.Log ("Waypoint: " + this.currentWayPoint.name + " distance = " + dist + " lap number " + this.laps);
 						}
-						//  Debug.Log ("Waypoint: " + this.currentWayPoint.name + " distance = " + dist + " lap number " + this.laps);
 					}
 				}
+				this.timeToGo = Time.fixedTime + updateDelay;
 			}
-			this.timeToGo = Time.fixedTime + updateDelay;
-		}
-	}
+        }
+    }
 
 	private bool detectCarIsOutOfTrack()
     {
@@ -210,7 +219,7 @@ public class WayPointUpdate : MonoBehaviour
 		// 1. update the wayPoint.
 		GameObject nextWayPoint = findWayPointByNumber(nextWayPointNumber);
 
-		// 2. move the cat to the wayPoint
+		// 2. move the car to the wayPoint
 		Vector3 newRotation = nextWayPoint.transform.rotation.eulerAngles;
 		this.transform.position = nextWayPoint.transform.position;
 		this.transform.eulerAngles = newRotation;

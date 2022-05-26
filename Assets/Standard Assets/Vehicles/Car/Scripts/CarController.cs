@@ -68,6 +68,9 @@ namespace UnityStandardAssets.Vehicles.Car
 		private Vector3 saved_position;
 		private Quaternion saved_rotation;
 
+		private string lastCollision = "none";
+		private string endOfLineColliderTarget = "end_line_collider";
+
 		public bool Skidding { get; private set; }
 
 		public float BrakeInput { get; private set; }
@@ -191,6 +194,35 @@ namespace UnityStandardAssets.Vehicles.Car
 			var revsRangeMin = ULerp (0f, m_RevRangeBoundary, CurveFactor (gearNumFactor));
 			var revsRangeMax = ULerp (m_RevRangeBoundary, 1f, gearNumFactor);
 			Revs = ULerp (revsRangeMin, revsRangeMax, m_GearFactor);
+		}
+
+		// that is the way that is done in Donkey
+		public void Set(Vector3 pos, Quaternion rot)
+        {
+            m_Rigidbody.position = pos;
+            m_Rigidbody.rotation = rot;
+
+            //just setting it once doesn't seem to work. Try setting it multiple times..
+            StartCoroutine(KeepSetting(pos, rot, 10));
+        }
+
+		IEnumerator KeepSetting(Vector3 pos, Quaternion rot, int numIter)
+		{
+			while (numIter > 0)
+			{
+				m_Rigidbody.isKinematic = true;
+
+				yield return new WaitForFixedUpdate();
+
+				m_Rigidbody.position = pos;
+				m_Rigidbody.rotation = rot;
+				transform.position = pos;
+                transform.rotation = rot;
+
+                numIter--;
+
+				m_Rigidbody.isKinematic = false;
+			}
 		}
 
 		public void Update ()
@@ -507,6 +539,30 @@ namespace UnityStandardAssets.Vehicles.Car
 			File.WriteAllBytes (path, image);
 			image = null;
 			return path;
+		}
+
+		//get the name of the last object we collided with
+		public string GetLastCollision()
+		{
+			return lastCollision;
+		}
+
+		public void ClearLastCollision()
+		{
+			lastCollision = "none";
+		}
+
+		void OnCollisionEnter(Collision col)
+		{ }
+
+		void OnTriggerEnter(Collider col)
+		{
+			if (col.gameObject.name == endOfLineColliderTarget)
+			{
+                Debug.Log("OnTriggerEnter Car Collision between "
+                    + gameObject.name + " and " + col.name);
+                lastCollision = col.name;
+			}
 		}
 	}
 

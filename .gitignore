@@ -25,3 +25,5 @@ sdc.app
 .vs
 ProjectSettings/ProjectVersion.txt
 Logs
+
+.vsconfig

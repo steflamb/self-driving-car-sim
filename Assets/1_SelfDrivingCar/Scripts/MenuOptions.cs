@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class MenuOptions : MonoBehaviour
 {
-	private string[] trackNames = new string[]{ "LakeTrack", "JungleTrack", "MountainTrack" };
+	private string[] trackNames = new string[]{ "LakeTrack", "JungleTrack", "MountainTrack"};
 	private int trackIndex = 0;
 	private Outline[] outlines;
 
