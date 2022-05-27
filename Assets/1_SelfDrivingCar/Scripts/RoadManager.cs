@@ -27,6 +27,7 @@ public class RoadManager : MonoBehaviour
 		roadBuilder.DestroyRoad();
 		roadBuilder.DestroyDynamicElements();
 		pathManager.InitCarPath(trackString);
+		pathManager.carPath.ResetActiveSpan();
 		//RepositionOverheadCamera();
 	}
 
