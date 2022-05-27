@@ -86,10 +86,10 @@ public class RoadBuilder : MonoBehaviour, IWaitCarPath
         foreach (GameObject g in prev)
             Destroy(g);
 
-        prev = GameObject.FindGameObjectsWithTag("Waypoint");
+        //prev = GameObject.FindGameObjectsWithTag("Waypoint");
 
-        foreach (GameObject g in prev)
-            Destroy(g);
+        //foreach (GameObject g in prev)
+        //    Destroy(g);
     }
 
     public void SetNewRoadVariation(int iVariation)
@@ -251,13 +251,12 @@ public class RoadBuilder : MonoBehaviour, IWaitCarPath
             path.centerNodes.Add(centerNode);
 
 
-            GameObject waypointGo = Instantiate(waypoint, centerNode.pos, centerNode.rotation);
-            waypointGo.tag = "Waypoint";
-            waypointGo.name = "Waypoint " + string.Format("{0:D3}", iNode);
+            //GameObject waypointGo = Instantiate(waypoint, centerNode.pos, centerNode.rotation);
+            //waypointGo.tag = "Waypoint";
+            //waypointGo.name = "Waypoint " + string.Format("{0:D3}", iNode);
 
             if (iVert == numVerts - 6 && path.pathType.Equals("point_path"))
             {
-                Debug.Log("add end line");
                 // only add end line (just before the end of the track), waypoint colliders are not needed
                 this.addEndLine(path, centerNode);
             }
