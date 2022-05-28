@@ -170,13 +170,17 @@ public class WayPointUpdate : MonoBehaviour
 	// this is actually OBE
 	public void registerCrash (int obe_num)
 	{
-        // TODO: fixes erroneous OBE when the simulation starts. Find a better way.
-        if (getWayPointNumber (this.currentWayPoint) > 1) {
-			this.isCarCrashed = true;
-			this.isCrashedInTheLastSecond = true;
-			this.lastCrash = System.DateTime.Now.ToFileTime ();
-			this.tot_obes = obe_num;
-		}
+		if(this.currentWayPoint != null)
+        {
+			// TODO: fixes erroneous OBE when the simulation starts. Find a better way.
+			if (getWayPointNumber(this.currentWayPoint) > 1)
+			{
+				this.isCarCrashed = true;
+				this.isCrashedInTheLastSecond = true;
+				this.lastCrash = System.DateTime.Now.ToFileTime();
+				this.tot_obes = obe_num;
+			}
+		}        
 	}
 
 	public void registerCollision(int collision_num)
