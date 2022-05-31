@@ -49,10 +49,11 @@ public class CommandServer : MonoBehaviour
 	}
 
 	// Update is called once per frame
-	void Update ()
+	void Update()
 	{
-        if (isOpen)
+		if (isOpen)
         {
+			pm.carPath.GetClosestSpan(_carController.transform.position);
 			timeSinceLastCapture += Time.deltaTime;
 			if (timeSinceLastCapture > 1.0f / limitFPS)
 			{
@@ -123,6 +124,9 @@ public class CommandServer : MonoBehaviour
 				// Collect Data from the Car
 				Dictionary<string, string> data = new Dictionary<string, string> ();
 
+				data["pos_x"] = _carController.transform.position[0].ToString("N4");
+				data["pos_y"] = _carController.transform.position[1].ToString("N4");
+				data["pos_z"] = _carController.transform.position[2].ToString("N4");
 				data ["steering_angle"] = _carController.CurrentSteerAngle.ToString ("N4");
 				data ["throttle"] = _carController.AccelInput.ToString ("N4");
 				data ["speed"] = _carController.CurrentSpeed.ToString ("N4");
