@@ -51,6 +51,21 @@ public class CommandServer : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+        /*if(pm != null)
+        {
+
+			pm.carPath.GetClosestSpan(_carController.transform.position);
+			Debug.Log("iActiveSpan: " + pm.carPath.iActiveSpan);
+
+			Transform tm = _carController.transform;
+
+			float cte = 0.0f;
+			(bool, bool) cte_ret = pm.carPath.GetCrossTrackErr(tm, ref cte);
+
+			Debug.Log("CTE: " + cte);
+		}*/
+
+
 		if (isOpen)
         {
 			pm.carPath.GetClosestSpan(_carController.transform.position);

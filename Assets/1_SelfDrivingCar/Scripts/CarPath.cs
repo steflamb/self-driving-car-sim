@@ -116,6 +116,11 @@ public class CarPath
     {
         Vector3 pos = tm.position;
 
+        if(iActiveSpan > nodes.Count - 2)
+        {
+            return (false, false);
+        }
+
         PathNode a = nodes[iActiveSpan];
         PathNode b = nodes[iActiveSpan + 1];
 
@@ -161,6 +166,11 @@ public class CarPath
     // Original
     public (bool, bool) GetCrossTrackErr(Vector3 pos, ref float err)
     {
+
+        if (iActiveSpan > nodes.Count - 2)
+        {
+            return (false, false);
+        }
 
         PathNode a = nodes[iActiveSpan];
         PathNode b = nodes[iActiveSpan + 1];
