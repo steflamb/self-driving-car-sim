@@ -127,7 +127,7 @@ public class RoadBuilder : MonoBehaviour, IWaitCarPath
         Transform endLineTransform = endLineGo.GetComponent<Transform>();
         endLineTransform.Rotate(new Vector3(90.000f, 0.0f, 0.0f));
         //endLineTransform.localScale = new Vector3(roadWidth * 2, 3.0f, 0.1538461f);
-        endLineTransform.localScale = new Vector3(roadWidth * 2, 3.0f, 20);
+        endLineTransform.localScale = new Vector3(roadWidth * 4, 1.0f, 80);
         endLineGo.tag = "end_line";
 
         MeshCollider meshCollider = endLineGo.AddComponent<MeshCollider>();
@@ -135,6 +135,7 @@ public class RoadBuilder : MonoBehaviour, IWaitCarPath
         meshCollider.convex = true;
         meshCollider.isTrigger = true;
         meshCollider.name = "end_line_collider";
+
     }
 
     public GameObject InitRoad(CarPath path)
@@ -255,7 +256,7 @@ public class RoadBuilder : MonoBehaviour, IWaitCarPath
             //waypointGo.tag = "Waypoint";
             //waypointGo.name = "Waypoint " + string.Format("{0:D3}", iNode);
 
-            if (iVert == numVerts - 6 && path.pathType.Equals("point_path"))
+            if ((iVert == numVerts - 2 || iVert == numVerts - 4 || iVert == numVerts - 6 || iVert == numVerts - 8 || iVert == numVerts - 10) && path.pathType.Equals("point_path"))
             {
                 // only add end line (just before the end of the track), waypoint colliders are not needed
                 this.addEndLine(path, centerNode);
