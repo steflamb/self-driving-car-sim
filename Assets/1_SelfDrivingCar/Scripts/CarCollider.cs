@@ -19,10 +19,10 @@ public class CarCollider : MonoBehaviour
 	void OnCollisionEnter (Collision collision)
 	{
 		if (collision.collider.name.Contains ("road-signs") || !collision.collider.name.Contains ("road")) {
-			collisions = collisions + 1;
+			// collisions = collisions + 1;
 			// Debug.Log ("Detected collision between " + gameObject.name + " and " + collision.collider.name);
 			// Debug.Log ("Collision number " + collisions + " between " + gameObject.name + " and " + collision.collider.name);
-			wayPointUpdate.registerCollision (collisions);
+			wayPointUpdate.registerCollision ();
 		}
 	}
 
@@ -30,9 +30,9 @@ public class CarCollider : MonoBehaviour
 	void OnTriggerEnter (Collider collider)
 	{
 		if (collider.name.Contains ("road-signs") || !collider.name.Contains ("road")) {
-			this.obe = this.obe + 1;
+			// this.obe = this.obe + 1;
 			// Debug.Log ("OUT OF BOUND Episode " + obe);
-			wayPointUpdate.registerCrash (obe);
+			wayPointUpdate.registerOutOfTrack ();
 		}
 	
 	}

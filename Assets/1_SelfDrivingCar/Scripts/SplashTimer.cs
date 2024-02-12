@@ -13,8 +13,20 @@ public class SplashTimer : MonoBehaviour
 
 	IEnumerator LoadMenuScene ()
 	{
-		yield return new WaitForSeconds (1.5f);
+		yield return new WaitForSeconds (0.1f);
 		//SceneManager.LoadScene ("LakeTrackAutonomousDay");
-		SceneManager.LoadScene("GeneratedTrack");
+
+		string sceneName = "MenuScene";
+
+		string[] args = System.Environment.GetCommandLineArgs();
+        for (int i = 0; i < args.Length; i++)
+        {
+            if (args[i].Contains("--track"))
+            {
+				Debug.Log(args[i] + " " + args[i+1]);
+				sceneName = args[i+1];
+            }
+        }
+		SceneManager.LoadScene(sceneName);
 	}
 }

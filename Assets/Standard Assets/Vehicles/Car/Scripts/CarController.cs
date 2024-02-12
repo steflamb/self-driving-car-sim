@@ -143,6 +143,17 @@ namespace UnityStandardAssets.Vehicles.Car
 
 			m_Rigidbody = GetComponent<Rigidbody> ();
 			m_CurrentTorque = m_FullTorqueOverAllWheels - (m_TractionControl * m_FullTorqueOverAllWheels);
+
+		}
+
+		public void Stop ()
+		{
+			// m_MaxHandbrakeTorque = float.MaxValue;
+
+			// m_Rigidbody = GetComponent<Rigidbody> ();
+			// m_CurrentTorque = 0;
+			m_Rigidbody.velocity = Vector3.zero;
+
 		}
 
 		private void GearChanging ()
@@ -563,6 +574,10 @@ namespace UnityStandardAssets.Vehicles.Car
                     + gameObject.name + " and " + col.name);
                 lastCollision = col.name;
 			}
+		}
+
+		public void SetTopSpeed(int speed) {
+			this.m_Topspeed = speed;
 		}
 	}
 

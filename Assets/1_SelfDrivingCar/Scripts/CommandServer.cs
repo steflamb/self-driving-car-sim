@@ -4,7 +4,7 @@ using SocketIO;
 using UnityStandardAssets.Vehicles.Car;
 using System;
 using System.Collections;
-
+using UnityEngine.SceneManagement;
 public class CommandServer : MonoBehaviour
 {
 	public CarRemoteControl CarRemoteControl;
@@ -15,10 +15,14 @@ public class CommandServer : MonoBehaviour
 	private bool isOpen = false;
 	public float limitFPS = 20.0f;
 	private float timeSinceLastCapture = 0.0f;
+	public WayPointUpdate _wayPointUpdate;
+	// for the cte
+	private WaypointTracker_pid _wpt;
 	// PID related variable
 	//Kv is the proportion of the current vel that
 	//we use to sample ahead of the vehicles actual position.
 	public float Kv = 1.0f;
+	private string sceneName = "new scene";
 
 	public static int Current()
 	{
@@ -44,13 +48,35 @@ public class CommandServer : MonoBehaviour
 		_socket.On("manual", OnManual);
 		_socket.On("track", OnTrackReceived);
 		_socket.On("reset", OnReset);
+		_socket.On("pause", OnPause);
+		_socket.On("resume", OnResume);
+		_socket.On("scene", OnScene);
+		_socket.On("settings", OnSettings);
+		// _socket.On("resume", OnResume);
 		_carController = CarRemoteControl.GetComponent<CarController> ();
+		_wayPointUpdate = GameObject.FindObjectOfType<WayPointUpdate> ();
+		_wpt = new WaypointTracker_pid ();
 		pm = GameObject.FindObjectOfType<PathManager>();
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
+
+		// TODO: I should move this on application related stuff
+		// TODO: Make 20 less hard coded
+		if(Application.targetFrameRate != 20)
+			Application.targetFrameRate = 20;
+
+		Debug.Log(1/Time.deltaTime);
+
+		if (Input.GetKey (KeyCode.P)) {
+			Time.timeScale = 0;
+		}
+		else if (Input.GetKey (KeyCode.L)) {
+			Time.timeScale = 1;
+		}
+
         /*if(pm != null)
         {
 
@@ -65,10 +91,14 @@ public class CommandServer : MonoBehaviour
 			Debug.Log("CTE: " + cte);
 		}*/
 
+		EmitTelemetry();
 
 		if (isOpen)
         {
-			pm.carPath.GetClosestSpan(_carController.transform.position);
+			// Refactor the three tracks to make them compatible with pathmanager
+			if (pm != null) {
+				pm.carPath.GetClosestSpan(_carController.transform.position);
+			}
 			timeSinceLastCapture += Time.deltaTime;
 			if (timeSinceLastCapture > 1.0f / limitFPS)
 			{
@@ -84,7 +114,10 @@ public class CommandServer : MonoBehaviour
 		CarRemoteControl.SteeringAngle = 0.0f;
 		CarRemoteControl.Acceleration = 0.0f;
 		CarRemoteControl.Brake = 10.0f;
-		pm.carPath.ResetActiveSpan();
+		_wpt = new WaypointTracker_pid ();
+		if (pm!= null) {
+			pm.carPath.ResetActiveSpan();
+		}
 	}
  
 	void OnOpen (SocketIOEvent obj)
@@ -92,6 +125,50 @@ public class CommandServer : MonoBehaviour
         Debug.Log("Connection Open");
         isOpen = true;
 	}
+
+	void OnPause (SocketIOEvent obj)
+	{
+		Debug.Log("Pause");
+        Time.timeScale = 0;
+	}
+
+	void OnResume (SocketIOEvent obj)
+	{
+		Debug.Log("Resume");
+        Time.timeScale = 1;
+	}
+
+	void OnSettings(SocketIOEvent obj)
+	{
+		JSONObject jsonObject = obj.data;
+		int topSpeed = int.Parse(jsonObject.GetField("max_speed").str);
+		float cteThreshold = float.Parse(jsonObject.GetField("cte_threshold").str);
+
+		_wayPointUpdate.cteThreshold = cteThreshold;
+		_carController.SetTopSpeed(topSpeed);
+	}
+
+	void OnScene(SocketIOEvent obj)
+	{
+		JSONObject jsonObject = obj.data;
+		string sceneName = jsonObject.GetField("scene_name").str;
+		SceneManager.LoadScene(sceneName);
+		// sceneName switch
+   		// {
+		// 	"lake-day" => SceneManager.LoadScene (name),
+		// 	"lake-daynight" => SceneManager.LoadScene (name),
+		// 	"mountain-day" => SceneManager.LoadScene (name),
+		// 	"mountain-daynight" => SceneManager.LoadScene (name),
+		// 	_ => throw new ArgumentException("Invalid string value for scene_name", nameof(sceneName)),
+   		// };
+	}
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log("OnSceneLoaded: " + scene.name);
+        Debug.Log(mode);
+		this.sceneName = scene.name;
+    }
 
 	void OnTrackReceived(SocketIOEvent obj)
     {
@@ -129,7 +206,6 @@ public class CommandServer : MonoBehaviour
 
 	void EmitTelemetry ()
 	{
-
 		UnityMainThreadDispatcher.Instance ().Enqueue (() => {
 			// send only if it's not being manually driven
 			if ((Input.GetKey (KeyCode.W)) || (Input.GetKey (KeyCode.S))) {
@@ -142,11 +218,14 @@ public class CommandServer : MonoBehaviour
 				data["pos_x"] = _carController.transform.position[0].ToString("N4");
 				data["pos_y"] = _carController.transform.position[1].ToString("N4");
 				data["pos_z"] = _carController.transform.position[2].ToString("N4");
-				data ["steering_angle"] = _carController.CurrentSteerAngle.ToString ("N4");
-				data ["throttle"] = _carController.AccelInput.ToString ("N4");
-				data ["speed"] = _carController.CurrentSpeed.ToString ("N4");
-				data["hit"] = _carController.GetLastCollision();
-				_carController.ClearLastCollision();
+				data["steering_angle"] = _carController.CurrentSteerAngle.ToString ("N4");
+				data["throttle"] = _carController.AccelInput.ToString ("N4");
+				data["speed"] = _carController.CurrentSpeed.ToString ("N4");
+				data["hit"] = _wayPointUpdate.getCrashNumber().ToString("N4");
+				// data["hit"] = _carController.GetLastCollision();
+				data["oot"] = _wayPointUpdate.getOBENumber().ToString("N4");
+				data["scene"] = SceneManager.GetActiveScene().name;
+				// _carController.ClearLastCollision();
 
 				if (pm != null)
                 {
@@ -179,6 +258,11 @@ public class CommandServer : MonoBehaviour
 				else
                 {
 					data["cte"] = null;
+					if (_wpt != null) {
+						var cte = _wpt.CrossTrackError (_carController);
+						//Debug.Log("CTE: " + cte);
+						data ["cte"] = cte.ToString ("N4");
+				}
 
 				}
 
