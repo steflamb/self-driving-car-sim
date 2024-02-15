@@ -68,12 +68,12 @@ public class CommandServer : MonoBehaviour
 		if(Application.targetFrameRate != 20)
 			Application.targetFrameRate = 20;
 
-		Debug.Log(1/Time.deltaTime);
-
 		if (Input.GetKey (KeyCode.P)) {
+			Debug.Log("Pause");
 			Time.timeScale = 0;
 		}
 		else if (Input.GetKey (KeyCode.L)) {
+			Debug.Log("Resume");
 			Time.timeScale = 1;
 		}
 

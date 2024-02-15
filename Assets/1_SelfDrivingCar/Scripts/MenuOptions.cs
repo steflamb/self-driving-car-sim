@@ -178,7 +178,7 @@ public class MenuOptions : MonoBehaviour
 		augmentationOutlines [3].effectColor = new Color (255, 255, 255);
 	}
 
-	public void setReinyAugmentation ()
+	public void setRainyAugmentation ()
 	{
 		augmentationIndex = 1;
 		augmentationOutlines [1].effectColor = new Color (0, 0, 0);

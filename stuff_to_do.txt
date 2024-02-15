@@ -1,0 +1,13 @@
+One single binary for both road generation and three tracks
+- let users choose from GUI
+- let users choose at startup using some arguments
+
+Allow users to modify some settings in the simulator at runtime
+
+Add weathers in rode generation
+
+Add a class to save args and override default args using those args
+
+Make framerate configurable
+
+Fix websocket for up-to-date versions of python libraries

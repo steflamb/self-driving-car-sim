@@ -14,6 +14,7 @@ public class SplashTimer : MonoBehaviour
 	IEnumerator LoadMenuScene ()
 	{
 		yield return new WaitForSeconds (0.1f);
+		// Dictionary<string, string> argsDict = new Dictionary<string, string>();
 		//SceneManager.LoadScene ("LakeTrackAutonomousDay");
 
 		string sceneName = "MenuScene";
