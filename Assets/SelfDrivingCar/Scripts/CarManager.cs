@@ -46,7 +46,7 @@ public class CarManager : MonoBehaviour
         if (_carRemoteControl != null) 
         {
             if (currentTime - _lastTimeTelemetryUpdated > _confManager.conf.telemetryMinInterval) {
-                telemetry.timestamp = currentTime;
+                telemetry.timestamp = currentTime.ToString();
                 _socket.Emit("car_telemetry", JsonUtility.ToJson(telemetry));
                 _lastTimeTelemetryUpdated = currentTime;
             }
@@ -77,7 +77,7 @@ public class CarManager : MonoBehaviour
 [System.Serializable]
 public class CarTelemetry
 {
-    public long timestamp;
+    public string timestamp;
     public string image;
     public float pos_x;
     public float pos_y;

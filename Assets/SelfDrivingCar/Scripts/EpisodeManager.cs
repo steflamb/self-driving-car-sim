@@ -29,20 +29,10 @@ public class EpisodeManager : MonoBehaviour
         // Resume simulation
 		_socket.On("resume_sim", ResumeSim);
         // Initialize the episode
-		_socket.On("new_episode", NewEpisode);
+		// _socket.On("new_episode", NewEpisode);
+		_socket.On("end_episode", EndEpisode);
+		_socket.On("start_episode", StartEpisode);
     } 
-
-    public void Reset() 
-    {
-        // send back the episode metrics and events
-        _socket.Emit("episode_metrics", JsonUtility.ToJson(metrics));
-        _socket.Emit("episode_events", JsonUtility.ToJson(eventRecords));
-        // reset episode metrics and events
-        eventRecords = new List<EpisodeEvent>();
-        metrics = new EpisodeMetrics();
-        // emit successful reset
-        _socket.Emit("new_episode", new JSONObject ());
-    }
 
     public void ResetTrack(Track track)
     {
@@ -61,7 +51,6 @@ public class EpisodeManager : MonoBehaviour
                 SceneManager.LoadScene("GeneratedTrack");
                 break;
         }
-        this.Reset();
     }
 
     public void AddEvent(EpisodeEvent e)
@@ -96,14 +85,27 @@ public class EpisodeManager : MonoBehaviour
         _socket.Emit("sim_resumed", new JSONObject ());
 	}
 
-    private void NewEpisode (SocketIOEvent obj)
+    private void EndEpisode (SocketIOEvent obj)
+    {
+        // send back the episode metrics and events
+        _socket.Emit("episode_metrics", JsonUtility.ToJson(metrics));
+        _socket.Emit("episode_events", JsonUtility.ToJson(eventRecords));
+        Time.timeScale = 0;
+        _socket.Emit("episode_ended", new JSONObject ());
+    }
+
+    private void StartEpisode (SocketIOEvent obj)
     {
         JSONObject jsonObject = obj.data;
-        // TODO: check if I need additional information
 		string trackName = jsonObject.GetField("track_name").str;
         this.ResetTrack(this.TrackFromString(trackName));
-        _socket.Emit("new_episode_configured", new JSONObject ());
+        // reset episode metrics and events
+        eventRecords = new List<EpisodeEvent>();
+        metrics = new EpisodeMetrics();
+        Time.timeScale = 1;
+        _socket.Emit("episode_started", new JSONObject ());
     }
+
 
     // TODO: Helper function, should probably be removed from here
     private Track TrackFromString(string name) {

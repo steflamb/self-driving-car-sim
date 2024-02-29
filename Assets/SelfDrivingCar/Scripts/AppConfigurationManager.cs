@@ -2,6 +2,8 @@ using UnityEngine;
 using SocketIO;
 using UnityEngine.SceneManagement;
 using System;
+// For files
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 public class AppConfigurationManager : MonoBehaviour
@@ -20,6 +22,24 @@ public class AppConfigurationManager : MonoBehaviour
         // TODO: read configuration from command line
         conf.fps = 30;
         conf.port = 4567;
+
+        string[] args = Environment.GetCommandLineArgs();
+        for (int i = 1; i < args.Length - 1; i++) {
+            if (args[i] == "--config") {
+                var configFilename = args[i+1];
+                this.conf = JsonUtility.FromJson<AppConfiguration>(File.ReadAllText(configFilename));
+            }
+        }
+
+        for (int i = 1; i < args.Length - 1; i++) {
+            if (args[i] == "--fps") {
+                conf.fps = int.Parse(args[i+1]);
+            }
+            if (args[i] == "--port") {
+                conf.port = int.Parse(args[i+1]);
+            }
+        }
+
         Debug.Log("Application started with the following configuration: " + JsonUtility.ToJson(conf));
 
         // Set frame rate
@@ -48,24 +68,3 @@ public class AppConfiguration
 
 
 }
-
-
-
-// public class RemoteCommandHandler
-// {
-//     private SocketIOComponent _socket;
-//     private EpisodeManager _episodeManager;
-//     private CarRemoteControl _carRemoteControl;
-
-//     public void Start() 
-//     {
-
-//         GameObject _app = GameObject.Find("_app");
-//         _socket = _app.GetComponent<SocketIOComponent> ();
-//         _episodeManager = _app.GetComponent<EpisodeManager> ();
-//         // TODO: Separate commands for episode/scene and car
-//         // Car action
-//     }
-
-
-// }

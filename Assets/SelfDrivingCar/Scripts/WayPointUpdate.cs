@@ -85,16 +85,13 @@ public class WayPointUpdate : MonoBehaviour
         {
             bool stuck = false;
 			bool outs = false;
-
+			// TODO: time is measured relative to frames. It would be better to measure absolute time.
 			this.timeAfterRepositioning = this.timeAfterRepositioning + 1;
-			if (this.laps != 1 || getWayPointNumber(this.currentWayPoint) != 0)
-			{
-				// TODO: when the car gets stuck, crash is not registered
-				stuck = detectCarIsStuck();
+			// TODO: when the car gets stuck, crash is not registered
+			stuck = detectCarIsStuck();
 
-				// seems to work, needs more testing
-				outs = detectCarIsOutOfTrack();
-			}
+			// seems to work, needs more testing
+			outs = detectCarIsOutOfTrack();
 
 			if (outs) {
 				// stopCar();
@@ -212,8 +209,8 @@ public class WayPointUpdate : MonoBehaviour
 				this.lastCrash = System.DateTime.Now.ToFileTime();
 				this.oot_counter = this.oot_counter + 1;
 				this._episodeManager.AddEvent("out_of_track", "");
-				this.manageOutOfTrack();
 			}
+			this.manageOutOfTrack();
 		}
 
 
@@ -232,8 +229,8 @@ public class WayPointUpdate : MonoBehaviour
 				this.lastCrash = System.DateTime.Now.ToFileTime();
 				this.collision_counter = this.collision_counter + 1;
 				this._episodeManager.AddEvent("collision", "");
-				this.manageCollision();
 			}
+			this.manageCollision();
 		}
 	}
 
