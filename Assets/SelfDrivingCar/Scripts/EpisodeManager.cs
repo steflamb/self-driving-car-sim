@@ -13,6 +13,7 @@ public class EpisodeManager : MonoBehaviour
     private SocketIOComponent _socket;
 
     public void Update() {
+        // TODO: remove and option in the menu
         if (Input.GetKey (KeyCode.Z)) {
 			ResetTrack(Track.RoadGenerator);
 		}
@@ -24,12 +25,13 @@ public class EpisodeManager : MonoBehaviour
         metrics = new EpisodeMetrics();
         _app = GameObject.Find("__app");
         _socket = _app.GetComponent<SocketIOComponent> ();
+
+        // External Network API
         // Pause simulation
 		_socket.On("pause_sim", PauseSim);
         // Resume simulation
 		_socket.On("resume_sim", ResumeSim);
         // Initialize the episode
-		// _socket.On("new_episode", NewEpisode);
 		_socket.On("end_episode", EndEpisode);
 		_socket.On("start_episode", StartEpisode);
     } 
@@ -88,9 +90,9 @@ public class EpisodeManager : MonoBehaviour
     private void EndEpisode (SocketIOEvent obj)
     {
         // send back the episode metrics and events
+        Time.timeScale = 0;
         _socket.Emit("episode_metrics", JsonUtility.ToJson(metrics));
         _socket.Emit("episode_events", JsonUtility.ToJson(eventRecords));
-        Time.timeScale = 0;
         _socket.Emit("episode_ended", new JSONObject ());
     }
 
@@ -119,7 +121,7 @@ public class EpisodeManager : MonoBehaviour
             case "road_generator":
                 return Track.RoadGenerator;
             default:
-                Debug.Log("Track {0} not recognized, returning Track Lake");
+                Debug.Log("Track {0} not recognized, returning Track Lake.");
                 return Track.Lake;
         }
     }
@@ -139,12 +141,12 @@ public class EpisodeEvent
 {
 
     // Unix time in milliseconds
-    public long timestamp;
+    public string timestamp;
     public string key;
     public string value;
 
     public EpisodeEvent(string key, string value) {
-        this.timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+        this.timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString();
         this.key = key;
         this.value = value;
     }

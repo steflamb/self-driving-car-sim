@@ -5,6 +5,7 @@ namespace UnityStandardAssets.Vehicles.Car
 {
 
 	// Way to around multiple returns
+	// TODO: do not use underscore for class name
 	public class WaypointTracker_pid
 	{
 

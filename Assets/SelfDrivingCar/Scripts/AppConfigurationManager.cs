@@ -18,11 +18,11 @@ public class AppConfigurationManager : MonoBehaviour
         // TODO: change "__app" with a constant
         GameObject _app = GameObject.Find("__app");
 
-        // TODO: read configuration from file
-        // TODO: read configuration from command line
+        // Default settings
         conf.fps = 30;
         conf.port = 4567;
 
+        // Read settings from config file
         string[] args = Environment.GetCommandLineArgs();
         for (int i = 1; i < args.Length - 1; i++) {
             if (args[i] == "--config") {
@@ -31,6 +31,7 @@ public class AppConfigurationManager : MonoBehaviour
             }
         }
 
+        // Read settings from command line
         for (int i = 1; i < args.Length - 1; i++) {
             if (args[i] == "--fps") {
                 conf.fps = int.Parse(args[i+1]);
