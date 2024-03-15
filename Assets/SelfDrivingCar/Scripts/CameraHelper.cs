@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.IO;
 
 public static class CameraHelper
 {
@@ -6,11 +7,13 @@ public static class CameraHelper
 	{
 		RenderTexture targetTexture = camera.targetTexture;
 		RenderTexture.active = targetTexture;
-		Texture2D texture2D = new Texture2D (targetTexture.width, targetTexture.height, TextureFormat.RGB24, false);
+		Texture2D texture2D = new Texture2D (targetTexture.width, targetTexture.height, TextureFormat.RGB24, false, false);
 		texture2D.ReadPixels (new Rect (0, 0, targetTexture.width, targetTexture.height), 0, 0);
 		texture2D.Apply ();
-		byte[] image = texture2D.EncodeToJPG ();	
+		byte[] image = texture2D.EncodeToPNG ();
 		Object.DestroyImmediate (texture2D); // Required to prevent leaking the texture
 		return image;
 	}
+
+
 }

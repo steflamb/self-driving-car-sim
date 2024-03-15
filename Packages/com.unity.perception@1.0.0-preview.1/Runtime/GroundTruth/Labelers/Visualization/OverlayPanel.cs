@@ -81,6 +81,7 @@ namespace UnityEngine.Perception.GroundTruth
             m_SegmentTransparency = 0.8f;
             m_BackgroundTransparency = 0.0f;
             m_SegVisual = GameObject.Instantiate(Resources.Load<GameObject>("SegmentTexture"));
+            m_SegVisual.name = "SegmentTexture";
 
             m_OverlayImage = m_SegVisual.GetComponent<RawImage>();
             m_OverlayImage.material.SetFloat("_SegmentTransparency", m_SegmentTransparency);

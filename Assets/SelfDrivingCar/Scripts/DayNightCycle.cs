@@ -47,7 +47,7 @@ public class DayNightCycle : MonoBehaviour
 		timePassedInSeconds = Time.time - startTime + (startTimeIn24HoursFormat * oneHourInGameSeconds);
 		float currentTimeInGameHours = (timePassedInSeconds / oneHourInGameSeconds) % 24;
 		// hendle car lights in neght vs day time
-		if (currentTimeInGameHours < (sunriseMaxHour - 1) || currentTimeInGameHours > (sunsetMaxHour - 2)) {
+		if (currentTimeInGameHours < (sunriseMaxHour - 1) || currentTimeInGameHours > (sunsetMaxHour - 3)) {
 			activateLights ();
 		} else {
 			deactivateLights ();

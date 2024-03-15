@@ -408,7 +408,6 @@ namespace SocketIO
 
 		private void EmitEvent(SocketIOEvent ev)
 		{
-			Debug.Log("handling " + ev.ToString());
 			if (!handlers.ContainsKey(ev.name)) { return; }
 			foreach (Action<SocketIOEvent> handler in this.handlers[ev.name]) {
 				try{

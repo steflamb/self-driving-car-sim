@@ -55,7 +55,7 @@ public class CarManager : MonoBehaviour
         // connectWaypointController();
 
         long currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-        if (carRemoteController != null) 
+        if (carRemoteController != null)
         {
             if (currentTime - lastTimeTelemetryUpdated > confManager.conf.telemetryMinInterval) {
 	            CurrentTelemetry.timestamp = currentTime.ToString();
@@ -72,9 +72,15 @@ public class CarManager : MonoBehaviour
 	    {
 		    carController = car.GetComponent<CarController> ();
 		    carRemoteController = car.GetComponent<CarRemoteControl> ();
-		    frontFacingCamera = GameObject.Find("Front Facing Camera").GetComponent<Camera>();
-		    perceptionCamera = GameObject.Find("Perception Camera").GetComponent<PerceptionCamera>();
 	    }
+		var ffc = GameObject.Find("Front Facing Camera");
+		if (ffc != null) {
+			frontFacingCamera = ffc.GetComponent<Camera>();
+		}
+		var pc = GameObject.Find("Perception Camera");
+		if (pc != null) {
+			perceptionCamera = pc.GetComponent<PerceptionCamera>();
+		}
     }
 
     private void connectWaypointController()
@@ -101,69 +107,43 @@ public class CarManager : MonoBehaviour
 		UnityMainThreadDispatcher.Instance().Enqueue(() =>
 			{
 				CarTelemetry telemetry = new CarTelemetry();
-				Debug.Log(carController);
 				// If the car controller is available, collect car position
 				if (carController != null)
 				{
 					telemetry.timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString();
+
 					telemetry.image = Convert.ToBase64String (CameraHelper.CaptureFrame (frontFacingCamera));
-					perceptionCamera.RequestCapture();
-					// Debug.Log(perceptionCamera.m_RgbSensorCaptures.buffer);
-					// if (perceptionCamera.GetChannel<RGBChannel>() != null)
-					// {
-					// 	Debug.Log(perceptionCamera.GetChannel<RGBChannel>().outputTexture.name);
-					// }
-					// if (perceptionCamera.GetChannel<DepthChannel>() != null)
-					// {
-					// 	Debug.Log(perceptionCamera.GetChannel<DepthChannel>().outputTexture.name);
-					// }
-					Debug.Log(perceptionCamera.channels);
 
-					Debug.Log(perceptionCamera.channels[0].outputTexture.name);
-					Debug.Log(perceptionCamera.labelers);
-					// Debug.Log(GameObject.Find("SegmentTexture(Clone)").name);
-					var targetTexture = GameObject.Find("SegmentTexture(Clone)").GetComponent<RawImage>().texture;
-					RenderTexture.active = (RenderTexture) targetTexture;
-					// Debug.Log(targetTexture);
-					// Debug.Log(targetTexture.EncodeToPNG());
-					Texture2D texture2D = new Texture2D (targetTexture.width, targetTexture.height, TextureFormat.RGBA32, false);
-					texture2D.ReadPixels (new Rect (0, 0, targetTexture.width, targetTexture.height), 0, 0);
-					texture2D.Apply ();
-					byte[] image = texture2D.EncodeToPNG ();
-					UnityEngine.Object.DestroyImmediate (texture2D);
-					telemetry.semantic_segmentation = Convert.ToBase64String(image);
-					Debug.Log(telemetry.semantic_segmentation);
-					// var tex = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGBAFloat, false, true);
-					// Debug.Log(perceptionCamera.overlayPanel);
-					// Debug.Log(perceptionCamera.labelers[0].overlayImage);
-					// var renderTexture = perceptionCamera.channels[0].outputTexture;
-					// tex = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGBAFloat, false, true);
-					// var oldRt = RenderTexture.active;
-					// tex.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
-					// tex.Apply();
-					// RenderTexture.active = oldRt;
-					// SaveTexture2DToFile(tex, filePath, fileFormat, jpgQuality);
-					// if (Application.isPlaying)
-					// 	Object.Destroy(tex);
-					// else
-					// 	Object.DestroyImmediate(tex);
-
-					// telemetry.semantic_segmentation = Convert.ToBase64String (CameraHelper.CaptureFrame (perceptionCamera.attachedCamera));
 					telemetry.pos_x = carController.transform.position[0];
 					telemetry.pos_y = carController.transform.position[1];
 					telemetry.pos_z = carController.transform.position[2];
 					telemetry.steering_angle = carController.CurrentSteerAngle;
 					telemetry.throttle = carController.AccelInput;
 					telemetry.speed = carController.CurrentSpeed;
+					this.CurrentTelemetry = telemetry;
+				}
+
+				if (perceptionCamera != null)
+				{
+					perceptionCamera.RequestCapture();
+					var targetTexture = GameObject.Find("SegmentTexture").GetComponent<RawImage>().texture;
+					RenderTexture.active = (RenderTexture) targetTexture;
+					Texture2D texture2D = new Texture2D (targetTexture.width, targetTexture.height, TextureFormat.RGB24, false);
+					texture2D.ReadPixels (new Rect (0, 0, targetTexture.width, targetTexture.height), 0, 0);
+					texture2D.Apply ();
+					byte[] image = texture2D.EncodeToPNG ();
+					UnityEngine.Object.DestroyImmediate (texture2D);
+					telemetry.semantic_segmentation = Convert.ToBase64String(image);
+					this.CurrentTelemetry = telemetry;
 				}
 
 				// TODO: manage the part for Road Generator
 
-				Debug.Log(waypointController);
 				// If there's a way point tracking system
 				if (waypointController != null)
 				{
 					telemetry.cte = waypointController.CrossTrackError(carController);
+					this.CurrentTelemetry = telemetry;
 				}
 
 				this.CurrentTelemetry = telemetry;
