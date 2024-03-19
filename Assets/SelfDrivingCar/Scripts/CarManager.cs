@@ -41,9 +41,15 @@ public class CarManager : MonoBehaviour
         socket = app.GetComponent<SocketIOComponent> ();
         confManager = app.GetComponent<AppConfigurationManager> ();
         lastTimeTelemetryUpdated = -1;
-        waypointController = new WaypointTracker_pid();
+		SceneManager.sceneLoaded += OnSceneLoaded;
+        // waypointController = new WaypointTracker_pid();
         socket.On("action", carAction);
     }
+
+	public void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
+		Debug.Log(scene);
+        // waypointController = new WaypointTracker_pid();
+	}
 
     public void Update()
     {
@@ -53,16 +59,6 @@ public class CarManager : MonoBehaviour
         // TODO: this is very important for performance reasons
         connectCarController();
         // connectWaypointController();
-
-        long currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-        if (carRemoteController != null)
-        {
-            if (currentTime - lastTimeTelemetryUpdated > confManager.conf.telemetryMinInterval) {
-	            CurrentTelemetry.timestamp = currentTime.ToString();
-                socket.Emit("car_telemetry", JsonUtility.ToJson(CurrentTelemetry));
-                lastTimeTelemetryUpdated = currentTime;
-            }
-        }
     }
     
     private void connectCarController()
@@ -72,6 +68,8 @@ public class CarManager : MonoBehaviour
 	    {
 		    carController = car.GetComponent<CarController> ();
 		    carRemoteController = car.GetComponent<CarRemoteControl> ();
+			var wu = car.GetComponent<WayPointUpdate>();
+			waypointController = wu.waypointTracker_pid;
 	    }
 		var ffc = GameObject.Find("Front Facing Camera");
 		if (ffc != null) {
@@ -97,6 +95,7 @@ public class CarManager : MonoBehaviour
         if (carRemoteController != null) 
         {
             JSONObject jsonObject = obj.data;
+			Debug.Log("Steering: " + jsonObject.GetField ("steering_angle").str + ", CTE: " + CurrentTelemetry.cte);
             carRemoteController.SteeringAngle = float.Parse (jsonObject.GetField ("steering_angle").str);
             carRemoteController.Acceleration = float.Parse (jsonObject.GetField ("throttle").str);
         }
@@ -126,15 +125,20 @@ public class CarManager : MonoBehaviour
 				if (perceptionCamera != null)
 				{
 					perceptionCamera.RequestCapture();
-					var targetTexture = GameObject.Find("SegmentTexture").GetComponent<RawImage>().texture;
-					RenderTexture.active = (RenderTexture) targetTexture;
-					Texture2D texture2D = new Texture2D (targetTexture.width, targetTexture.height, TextureFormat.RGB24, false);
-					texture2D.ReadPixels (new Rect (0, 0, targetTexture.width, targetTexture.height), 0, 0);
-					texture2D.Apply ();
-					byte[] image = texture2D.EncodeToPNG ();
-					UnityEngine.Object.DestroyImmediate (texture2D);
-					telemetry.semantic_segmentation = Convert.ToBase64String(image);
-					this.CurrentTelemetry = telemetry;
+					if (GameObject.Find("SegmentTexture") != null)
+					{
+						var targetTexture = GameObject.Find("SegmentTexture").GetComponent<RawImage>().texture;
+						RenderTexture.active = (RenderTexture) targetTexture;
+						Texture2D texture2D = new Texture2D (targetTexture.width, targetTexture.height, TextureFormat.RGB24, false, false);
+						texture2D.ReadPixels (new Rect (0, 0, targetTexture.width, targetTexture.height), 0, 0);
+						texture2D.Apply ();
+						byte[] image = texture2D.EncodeToPNG ();
+						UnityEngine.Object.DestroyImmediate (texture2D);
+						telemetry.semantic_segmentation = Convert.ToBase64String(image);
+						this.CurrentTelemetry = telemetry;
+					} else {
+						Debug.Log("SegmentTexture not found");
+					}
 				}
 
 				// TODO: manage the part for Road Generator
@@ -142,11 +146,23 @@ public class CarManager : MonoBehaviour
 				// If there's a way point tracking system
 				if (waypointController != null)
 				{
-					telemetry.cte = waypointController.CrossTrackError(carController);
+					telemetry.cte = waypointController.CrossTrackError(carController, absolute: false);
 					this.CurrentTelemetry = telemetry;
+				} else {
+					Debug.Log("Waypoint controller not found");
 				}
-
 				this.CurrentTelemetry = telemetry;
+
+        		long currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+        		if (carRemoteController != null)
+        		{
+            		if (currentTime - lastTimeTelemetryUpdated > confManager.conf.telemetryMinInterval)
+					{
+	            		CurrentTelemetry.timestamp = currentTime.ToString();
+                		socket.Emit("car_telemetry", JsonUtility.ToJson(CurrentTelemetry));
+                		lastTimeTelemetryUpdated = currentTime;
+            		}
+        		}
 			}
 		);
 	}

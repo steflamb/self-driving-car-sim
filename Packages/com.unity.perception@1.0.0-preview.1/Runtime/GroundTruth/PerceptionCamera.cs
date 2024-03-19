@@ -524,6 +524,8 @@ namespace UnityEngine.Perception.GroundTruth
 
         void SetupVisualizationCamera()
         {
+
+// TODO: FIXME: We need development build to visualize segmentations, it would be probably better to have a texture just for it.
 #if !UNITY_EDITOR && !DEVELOPMENT_BUILD
             showVisualizations = false;
 #else

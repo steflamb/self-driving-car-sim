@@ -36,18 +36,47 @@ public class EpisodeManager : MonoBehaviour
 		_socket.On("start_episode", StartEpisode);
     } 
 
-    public void ResetTrack(Track track)
+    public void ResetTrack(
+        Track track,
+        Weather weather=Weather.Sunny,
+        DayTime dayTime=DayTime.Day)
     {
         // TODO: some stuff here are hard coded. Find better way to map track to sceneName
-        switch (track) {
+        switch (track)
+        {
             case Track.Lake:
-                SceneManager.LoadScene("LakeTrackAutonomousDay");
+                switch (dayTime)
+                {
+                    case DayTime.Day:
+                        SceneManager.LoadScene("LakeTrackAutonomousDay");
+                        break;
+                    case DayTime.DayNightCycle:
+                        SceneManager.LoadScene("LakeTrackAutonomousDayNightCycle");
+                        break;
+                }
                 break;
             case Track.Jungle:
-                SceneManager.LoadScene("JungleTrackAutonomousDay");
+                switch (dayTime)
+                {
+                    case DayTime.Day:
+                        SceneManager.LoadScene("JungleTrackAutonomousDay");
+                        break;
+                    case DayTime.DayNightCycle:
+                        SceneManager.LoadScene("JungleTrackAutonomousDayNightCycle");
+                        break;
+                }
                 break;
             case Track.Mountain:
-                SceneManager.LoadScene("MountainTrackAutonomousDay");
+                switch (dayTime)
+                {
+                    case DayTime.Day:
+                        SceneManager.LoadScene("MountainTrackAutonomousDay");
+                        break;
+                    case DayTime.DayNightCycle:
+                        SceneManager.LoadScene("MountainTrackAutonomousDayNightCycle");
+                        break;
+                }
+
                 break;
             case Track.RoadGenerator:
                 SceneManager.LoadScene("GeneratedTrack");
@@ -100,7 +129,13 @@ public class EpisodeManager : MonoBehaviour
     {
         JSONObject jsonObject = obj.data;
 		string trackName = jsonObject.GetField("track_name").str;
-        this.ResetTrack(this.TrackFromString(trackName));
+        string weatherName = jsonObject.GetField("weather_name").str;
+        string dayTimeName = jsonObject.GetField("daytime_name").str;
+        this.ResetTrack(
+            this.TrackFromString(trackName),
+            this.WeatherFromString(weatherName),
+            this.DayTimeFromString(dayTimeName)
+            );
         // reset episode metrics and events
         eventRecords = new List<EpisodeEvent>();
         metrics = new EpisodeMetrics();
@@ -123,6 +158,36 @@ public class EpisodeManager : MonoBehaviour
             default:
                 Debug.Log("Track {0} not recognized, returning Track Lake.");
                 return Track.Lake;
+        }
+    }
+
+    // TODO: Helper function, should probably be removed from here
+    private Weather WeatherFromString(string name) {
+        switch (name) {
+            case "sunny":
+                return Weather.Sunny;
+            case "rainy":
+                return Weather.Rainy;
+            case "foggy":
+                return Weather.Foggy;
+            case "snowy":
+                return Weather.Snowy;
+            default:
+                Debug.Log("Weather not recognized, returning Weather Sunny.");
+                return Weather.Sunny;
+        }
+    }
+
+    // TODO: Helper function, should probably be removed from here
+    private DayTime DayTimeFromString(string name) {
+        switch (name) {
+            case "day":
+                return DayTime.Day;
+            case "daynight":
+                return DayTime.DayNightCycle;
+            default:
+                Debug.Log("DayTime not recognized, returning DayTime Day.");
+                return DayTime.Day;
         }
     }
 

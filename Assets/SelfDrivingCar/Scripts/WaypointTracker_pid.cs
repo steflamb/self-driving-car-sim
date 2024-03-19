@@ -67,8 +67,9 @@ namespace UnityStandardAssets.Vehicles.Car
 			return closestWaypoint;
 		}
 
-		public float CrossTrackError (CarController cc)
+		public float CrossTrackError (CarController cc, bool absolute = true)
 		{
+
 			if(waypoints != null && waypoints.Count > 0)
             {
 				var next_wp = NextWaypoint(cc);
@@ -149,13 +150,17 @@ namespace UnityStandardAssets.Vehicles.Car
 				var centerPoint2D = new Vector2(centerPoint.x, centerPoint.z);
 				var centerToPos = Vector2.Distance(centerPoint2D, x0);
 				var centerToRef = Vector2.Distance(centerPoint2D, proj);
-				if (centerToPos <= centerToRef)
+				if (!absolute && centerToPos <= centerToRef)
 				{
 					cte *= -1f;
 				}
 				return cte;
 			}
-			return 0.0f;
+			else
+			{
+				Debug.Log("Waypoints not detected. Return cte: 0.");
+				return 0.0f;
+			}
 			
 		}
 

@@ -98,7 +98,7 @@ namespace UnityEngine.Perception.GroundTruth.Labelers
 
             var sensor = perceptionCamera.cameraSensor;
             m_SemanticSegmentationColorTexture = new RenderTexture(
-                new RenderTextureDescriptor(sensor.pixelWidth, sensor.pixelHeight, GraphicsFormat.R8G8B8A8_UNorm, 0))
+                new RenderTextureDescriptor(sensor.pixelWidth, sensor.pixelHeight, GraphicsFormat.R8G8B8A8_SRGB, 0))
             {
                 name = $"Semantic Segmentation {annotationId}",
                 filterMode = FilterMode.Point,

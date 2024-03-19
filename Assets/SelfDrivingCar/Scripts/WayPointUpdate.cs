@@ -7,8 +7,8 @@ public class WayPointUpdate : MonoBehaviour
 {
 
 	// TODO: Added stuff
-	private GameObject _app;
-	private EpisodeManager _episodeManager;
+	private GameObject app;
+	private EpisodeManager episodeManager;
 
 	public CarRemoteControl carRemoteControl;
 	public GameObject[] waypoints;
@@ -32,7 +32,7 @@ public class WayPointUpdate : MonoBehaviour
 	private int collision_counter = 0;
 	// private int tot_obes = 0;
 	// private int tot_crashes = 0;
-
+	// TODO: we should manage collision and out of tracks in a different file
 	public CarCollider carCollider;
 	private float timeLeft = 120.0f;
 	private float total_driven_distance = 0.0f;
@@ -45,8 +45,8 @@ public class WayPointUpdate : MonoBehaviour
 
 	void Awake ()
 	{
-		_app = GameObject.Find("__app");
-        _episodeManager = _app.GetComponent<EpisodeManager> ();
+		app = GameObject.Find("__app");
+        episodeManager = app.GetComponent<EpisodeManager> ();
 	}
 
 	// Use this for initialization
@@ -208,7 +208,7 @@ public class WayPointUpdate : MonoBehaviour
 				this.isCrashedInTheLastSecond = true;
 				this.lastCrash = System.DateTime.Now.ToFileTime();
 				this.oot_counter = this.oot_counter + 1;
-				this._episodeManager.AddEvent("out_of_track", "");
+				this.episodeManager.AddEvent("out_of_track", "");
 			}
 			this.manageOutOfTrack();
 		}
@@ -228,7 +228,7 @@ public class WayPointUpdate : MonoBehaviour
 				this.isCrashedInTheLastSecond = true;
 				this.lastCrash = System.DateTime.Now.ToFileTime();
 				this.collision_counter = this.collision_counter + 1;
-				this._episodeManager.AddEvent("collision", "");
+				this.episodeManager.AddEvent("collision", "");
 			}
 			this.manageCollision();
 		}
