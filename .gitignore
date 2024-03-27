@@ -27,3 +27,5 @@ ProjectSettings/ProjectVersion.txt
 Logs
 
 .vsconfig
+settings.json
+HUDFPS.cs.meta
