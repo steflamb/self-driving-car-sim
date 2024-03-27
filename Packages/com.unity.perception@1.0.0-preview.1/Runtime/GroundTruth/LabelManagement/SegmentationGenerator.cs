@@ -1,5 +1,5 @@
 using UnityEngine.Scripting.APIUpdating;
-
+using UnityEngine;
 namespace UnityEngine.Perception.GroundTruth.LabelManagement
 {
     [MovedFrom("UnityEngine.Perception.GroundTruth")]
