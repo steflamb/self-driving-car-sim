@@ -34,6 +34,9 @@ public class CommandServer : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
+		QualitySettings.vSyncCount = 0;
+		Application.targetFrameRate = 20;
+
 		_socket = GameObject.Find ("SocketIO").GetComponent<SocketIOComponent> ();
 		_socket.On ("open", OnOpen);
 		_socket.On ("steer", OnSteer);

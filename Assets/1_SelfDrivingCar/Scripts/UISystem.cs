@@ -45,6 +45,9 @@ public class UISystem : MonoSingleton<UISystem>
 	// Use this for initialization
 	void Start ()
 	{
+		QualitySettings.vSyncCount = 0;
+		Application.targetFrameRate = 20;
+		
 		waypointTracker_pid = new WaypointTracker_pid ();
 
 		topSpeed = carController.MaxSpeed;

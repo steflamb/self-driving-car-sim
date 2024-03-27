@@ -25,3 +25,4 @@ sdc.app
 .vs
 ProjectSettings/ProjectVersion.txt
 Logs
+settings.json

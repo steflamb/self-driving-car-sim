@@ -28,6 +28,9 @@ public class MenuOptions : MonoBehaviour
 
 	public void Start ()
 	{
+		QualitySettings.vSyncCount = 0;
+		Application.targetFrameRate = 20;
+		
 		// setup tracks
 		GameObject[] tracks = GameObject.FindGameObjectsWithTag ("Tracks");
 		this.outlines = new Outline[tracks.Length];
