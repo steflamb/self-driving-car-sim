@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using System.Diagnostics;
 
 public class MenuOptions : MonoBehaviour
 {
@@ -52,9 +53,10 @@ public class MenuOptions : MonoBehaviour
 			Outline dayNightOption = dayNight [i].GetComponent<Outline> ();
 			if (dayNightOption.name == "Day Track") {
 				dayTimeOutlines [0] = dayNightOption;
-			} else if (dayNightOption.name == "Full Day Track") {
+			}else if (dayNightOption.name == "Full Day Track") {
 				dayTimeOutlines [1] = dayNightOption;
-			}
+			} 
+            
 		}
 		if (dayTimeOutlines.Length > 0) {
 			dayTimeOutlines [0].effectColor = new Color (0, 0, 0);
@@ -160,16 +162,20 @@ public class MenuOptions : MonoBehaviour
 		trackTimeIndex = 0;
 		dayTimeOutlines [0].effectColor = new Color (0, 0, 0);
 		dayTimeOutlines [1].effectColor = new Color (255, 255, 255);
-	}
+        
+    }
 
 	public void setNightTrack ()
 	{
 		trackTimeIndex = 1;
 		dayTimeOutlines [1].effectColor = new Color (0, 0, 0);
 		dayTimeOutlines [0].effectColor = new Color (255, 255, 255);
-	}
+        
 
-	public void setNormalAugmentation ()
+    }
+    
+
+    public void setNormalAugmentation ()
 	{
 		augmentationIndex = 0;
 		augmentationOutlines [0].effectColor = new Color (0, 0, 0);

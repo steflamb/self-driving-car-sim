@@ -68,7 +68,7 @@ SpeedTreeImporter:
   hasBillboard: 1
   lODSettings:
   - enableSettingOverride: 1
-    height: 0.5
+    height: 0
     castShadows: 1
     receiveShadows: 1
     useLightProbes: 1
@@ -78,7 +78,7 @@ SpeedTreeImporter:
     enableSubsurface: 0
     windQuality: 5
   - enableSettingOverride: 1
-    height: 0.25
+    height: 0
     castShadows: 1
     receiveShadows: 1
     useLightProbes: 1
@@ -88,7 +88,7 @@ SpeedTreeImporter:
     enableSubsurface: 0
     windQuality: 5
   - enableSettingOverride: 1
-    height: 0.125
+    height: 0
     castShadows: 1
     receiveShadows: 1
     useLightProbes: 1
@@ -98,7 +98,7 @@ SpeedTreeImporter:
     enableSubsurface: 0
     windQuality: 5
   - enableSettingOverride: 1
-    height: 0.01
+    height: 0
     castShadows: 0
     receiveShadows: 0
     useLightProbes: 0
