@@ -182,4 +182,5 @@ public class CarTelemetry
     public float throttle;
     public float speed;
     public float cte;
+    public float next_cte;
 }
