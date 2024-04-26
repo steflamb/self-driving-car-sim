@@ -147,6 +147,7 @@ public class CarManager : MonoBehaviour
 				if (waypointController != null)
 				{
 					telemetry.cte = waypointController.CrossTrackError(carController, absolute: false);
+					telemetry.next_cte = waypointController.CrossTrackError(carController, absolute: false, next: true);
 					this.CurrentTelemetry = telemetry;
 				} else {
 					Debug.Log("Waypoint controller not found");

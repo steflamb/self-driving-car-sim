@@ -67,13 +67,19 @@ namespace UnityStandardAssets.Vehicles.Car
 			return closestWaypoint;
 		}
 
-		public float CrossTrackError (CarController cc, bool absolute = true)
+		public float CrossTrackError (CarController cc, bool absolute = true, bool next = false)
 		{
 
 			if(waypoints != null && waypoints.Count > 0)
             {
 				var next_wp = NextWaypoint(cc);
-				var pos = cc.transform.position;
+				Vector3 pos = cc.transform.position;
+				// TODO: better management of the future CTE
+				// TODO: the variable next probably might have a better name
+				if (next) {
+					float velMag = cc.CurrentSpeed;
+					pos = cc.transform.position + (cc.transform.forward * velMag * 0.3f);
+				}
 
 				// Previous waypoint
 				int prev_wp;
