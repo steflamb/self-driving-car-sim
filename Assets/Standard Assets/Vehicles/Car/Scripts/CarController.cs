@@ -538,9 +538,14 @@ namespace UnityStandardAssets.Vehicles.Car
 			camera.Render ();
 			RenderTexture targetTexture = camera.targetTexture;
 			RenderTexture.active = targetTexture;
-			Texture2D texture2D = new Texture2D (targetTexture.width, targetTexture.height, TextureFormat.RGBA32, false);
-			texture2D.ReadPixels (new Rect (0, 0, targetTexture.width, targetTexture.height), 0, 0);
-			texture2D.Apply ();
+
+            //Texture2D texture2D = new Texture2D (targetTexture.width, targetTexture.height, TextureFormat.RGBA32, false);
+            //texture2D.ReadPixels (new Rect (0, 0, targetTexture.width, targetTexture.height), 0, 0);
+
+            Texture2D texture2D = new Texture2D (targetTexture.width, targetTexture.height, TextureFormat.RGB24, false, false);
+            texture2D.ReadPixels (new Rect (0, 0, targetTexture.width, targetTexture.height), 0, 0);
+
+            texture2D.Apply ();
 			byte[] image = texture2D.EncodeToPNG ();
 			UnityEngine.Object.DestroyImmediate (texture2D);
 			string directory = Path.Combine (m_saveLocation, DirFrames);
