@@ -78,7 +78,7 @@ namespace UnityStandardAssets.Vehicles.Car
 				// TODO: the variable next probably might have a better name
 				if (next) {
 					float velMag = cc.CurrentSpeed;
-					pos = cc.transform.position + (cc.transform.forward * velMag * 0.3f);
+					pos = cc.transform.position + (cc.transform.forward * velMag * 0.1f);
 				}
 
 				// Previous waypoint

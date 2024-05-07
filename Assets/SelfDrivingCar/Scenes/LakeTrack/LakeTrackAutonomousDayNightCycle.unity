@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 428566102}
-  m_IndirectSpecularColor: {r: 4967.36, g: 2963.2483, b: 1823.3284, a: 1}
+  m_IndirectSpecularColor: {r: 5287.32, g: 3889.1853, b: 3979.636, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6656,7 +6656,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 0.19328503, g: 0.3719312, b: 0.47794116, a: 1}
-  m_Intensity: 2000
+  m_Intensity: 50000
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -6726,7 +6726,7 @@ MonoBehaviour:
   m_PointlightHDType: 0
   m_SpotLightShape: 0
   m_AreaLightShape: 0
-  m_Intensity: 2000
+  m_Intensity: 50000
   m_EnableSpotReflector: 1
   m_LuxAtDistance: 1
   m_InnerSpotPercent: 0
@@ -9512,7 +9512,7 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 0.972549, g: 0.8862745, b: 0.7058824, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 130000
   m_Range: 10
   m_SpotAngle: 30
@@ -10600,7 +10600,7 @@ MonoBehaviour:
   carLight2: {fileID: 22770312}
   secondsPerDay: 60
   timePassedInSeconds: 0
-  sunIntensityMax: 10000
+  sunIntensityMax: 130000
   sunIntensityMin: 0
 --- !u!1 &515310212
 GameObject:

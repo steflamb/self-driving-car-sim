@@ -42,6 +42,7 @@ public class EpisodeManager : MonoBehaviour
         DayTime dayTime=DayTime.Day)
     {
         // TODO: some stuff here are hard coded. Find better way to map track to sceneName
+        WeatherController.SetWeather (weather);
         switch (track)
         {
             case Track.Lake:
