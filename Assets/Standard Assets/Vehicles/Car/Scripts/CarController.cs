@@ -143,6 +143,17 @@ namespace UnityStandardAssets.Vehicles.Car
 
 			m_Rigidbody = GetComponent<Rigidbody> ();
 			m_CurrentTorque = m_FullTorqueOverAllWheels - (m_TractionControl * m_FullTorqueOverAllWheels);
+
+		}
+
+		public void Stop ()
+		{
+			// m_MaxHandbrakeTorque = float.MaxValue;
+
+			// m_Rigidbody = GetComponent<Rigidbody> ();
+			// m_CurrentTorque = 0;
+			m_Rigidbody.velocity = Vector3.zero;
+
 		}
 
 		private void GearChanging ()
@@ -253,8 +264,6 @@ namespace UnityStandardAssets.Vehicles.Car
 			m_SteerAngle = steering * m_MaximumSteerAngle;
 			m_WheelColliders [0].steerAngle = m_SteerAngle;
 			m_WheelColliders [1].steerAngle = m_SteerAngle;
-
-
 
 			SteerHelper ();
 			ApplyDrive (accel, footbrake);
@@ -529,13 +538,18 @@ namespace UnityStandardAssets.Vehicles.Car
 			camera.Render ();
 			RenderTexture targetTexture = camera.targetTexture;
 			RenderTexture.active = targetTexture;
-			Texture2D texture2D = new Texture2D (targetTexture.width, targetTexture.height, TextureFormat.RGB24, false);
-			texture2D.ReadPixels (new Rect (0, 0, targetTexture.width, targetTexture.height), 0, 0);
-			texture2D.Apply ();
-			byte[] image = texture2D.EncodeToJPG ();
+
+            //Texture2D texture2D = new Texture2D (targetTexture.width, targetTexture.height, TextureFormat.RGBA32, false);
+            //texture2D.ReadPixels (new Rect (0, 0, targetTexture.width, targetTexture.height), 0, 0);
+
+            Texture2D texture2D = new Texture2D (targetTexture.width, targetTexture.height, TextureFormat.RGB24, false, false);
+            texture2D.ReadPixels (new Rect (0, 0, targetTexture.width, targetTexture.height), 0, 0);
+
+            texture2D.Apply ();
+			byte[] image = texture2D.EncodeToPNG ();
 			UnityEngine.Object.DestroyImmediate (texture2D);
 			string directory = Path.Combine (m_saveLocation, DirFrames);
-			string path = Path.Combine (directory, prepend + "_" + timestamp + ".jpg");
+			string path = Path.Combine (directory, prepend + "_" + timestamp + ".png");
 			File.WriteAllBytes (path, image);
 			image = null;
 			return path;
@@ -563,6 +577,10 @@ namespace UnityStandardAssets.Vehicles.Car
                     + gameObject.name + " and " + col.name);
                 lastCollision = col.name;
 			}
+		}
+
+		public void SetTopSpeed(int speed) {
+			this.m_Topspeed = speed;
 		}
 	}
 

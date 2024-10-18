@@ -185,4 +185,26 @@ public class WeatherController : MonoBehaviour
 	
 	}
 
+	// TODO: weather is current saved as a string, save it as an enum or object
+	public static void SetWeather (Weather weather)
+	{
+		switch (weather) {
+			case Weather.Sunny:
+				WeatherController.weather = "Sun";
+				break;
+			case Weather.Rainy:
+				WeatherController.weather = "Rain";
+				break;
+			case Weather.Snowy:
+				WeatherController.weather = "Snow";
+				break;
+			case Weather.Foggy:
+				WeatherController.weather = "Fog";
+				break;
+		}
+		emissionType = EmissionType.CONSTANT;
+		constantEmissionRate = 10;
+	}
+
+
 }

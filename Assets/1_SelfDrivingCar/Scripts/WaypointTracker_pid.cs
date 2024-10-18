@@ -5,6 +5,7 @@ namespace UnityStandardAssets.Vehicles.Car
 {
 
 	// Way to around multiple returns
+	// TODO: do not use underscore for class name
 	public class WaypointTracker_pid
 	{
 
@@ -66,12 +67,19 @@ namespace UnityStandardAssets.Vehicles.Car
 			return closestWaypoint;
 		}
 
-		public float CrossTrackError (CarController cc)
+		public float CrossTrackError (CarController cc, bool absolute = true, bool next = false)
 		{
+
 			if(waypoints != null && waypoints.Count > 0)
             {
 				var next_wp = NextWaypoint(cc);
-				var pos = cc.transform.position;
+				Vector3 pos = cc.transform.position;
+				// TODO: better management of the future CTE
+				// TODO: the variable next probably might have a better name
+				if (next) {
+					float velMag = cc.CurrentSpeed;
+					pos = cc.transform.position + (cc.transform.forward * velMag * 0.1f);
+				}
 
 				// Previous waypoint
 				int prev_wp;
@@ -148,13 +156,17 @@ namespace UnityStandardAssets.Vehicles.Car
 				var centerPoint2D = new Vector2(centerPoint.x, centerPoint.z);
 				var centerToPos = Vector2.Distance(centerPoint2D, x0);
 				var centerToRef = Vector2.Distance(centerPoint2D, proj);
-				if (centerToPos <= centerToRef)
+				if (!absolute && centerToPos <= centerToRef)
 				{
 					cte *= -1f;
 				}
 				return cte;
 			}
-			return 0.0f;
+			else
+			{
+				Debug.Log("Waypoints not detected. Return cte: 0.");
+				return 0.0f;
+			}
 			
 		}
 
