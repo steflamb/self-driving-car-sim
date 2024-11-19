@@ -46,6 +46,7 @@ public class CommandServer : MonoBehaviour
 		_socket.On("steer", OnSteer);
 		_socket.On("manual", OnManual);
 		_socket.On("track", OnTrackReceived);
+		_socket.On("weather", OnWeatherReceived);
 		_socket.On("reset", OnReset);
 		_carController = CarRemoteControl.GetComponent<CarController> ();
 		pm = GameObject.FindObjectOfType<PathManager>();
@@ -107,6 +108,15 @@ public class CommandServer : MonoBehaviour
 		UnityMainThreadDispatcher.Instance().Enqueue(RegenTrack(trackString));
     }
 
+	void OnWeatherReceived(SocketIOEvent obj)
+    {
+		JSONObject jsonObject = obj.data;
+		string weather = jsonObject.GetField("type").str;
+		string rate = jsonObject.GetField("rate").str;
+		Debug.Log(weather);
+		Debug.Log(rate);
+    }
+
 	void OnManual(SocketIOEvent obj)
 	{
 		EmitTelemetry();
@@ -149,7 +159,16 @@ public class CommandServer : MonoBehaviour
 				data ["throttle"] = _carController.AccelInput.ToString ("N4");
 				data ["speed"] = _carController.CurrentSpeed.ToString ("N4");
 				data["hit"] = _carController.GetLastCollision();
+				data["angle1"] = _carController.transform.rotation[0].ToString ("N4");
+				data["angle2"] = _carController.transform.rotation[1].ToString ("N4");
+				data["angle3"] = _carController.transform.rotation[2].ToString ("N4");
+				data["angle4"] = _carController.transform.rotation[3].ToString ("N4");
+				data["angle5"] = _carController.transform.eulerAngles[0].ToString ("N4"); //euler
+				data["angle6"] = _carController.transform.eulerAngles[1].ToString ("N4"); //euler
+				data["angle7"] = _carController.transform.eulerAngles[2].ToString ("N4"); //euler
+				data["angl"]   = _carController.transform.eulerAngles[1].ToString ("N4");
 				_carController.ClearLastCollision();
+				// Debug.Log (_carController.transform.rotation.ToString ("N4"));
 
 				if (pm != null)
                 {
