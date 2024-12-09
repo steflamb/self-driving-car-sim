@@ -4,6 +4,13 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - Tracks
+  - TimeOfDay
+  - Augmentation
+  - Center
+  - Fire
+  - road_mesh
+  - end_line
   - Waypoint
   layers:
   - Default

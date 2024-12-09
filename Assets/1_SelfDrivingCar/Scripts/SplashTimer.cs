@@ -2,15 +2,19 @@
 using UnityEngine.SceneManagement;
 using System.Collections;
 
-public class SplashTimer : MonoBehaviour {
+public class SplashTimer : MonoBehaviour
+{
 
 	// Use this for initialization
-	void Start () {
-		StartCoroutine (LoadMenuScene());
+	void Start ()
+	{
+		StartCoroutine (LoadMenuScene ());
 	}
 
-	IEnumerator LoadMenuScene(){
+	IEnumerator LoadMenuScene ()
+	{
 		yield return new WaitForSeconds (1.5f);
-		SceneManager.LoadScene ("MenuScene");
-	}		
+		//SceneManager.LoadScene ("LakeTrackAutonomousDay");
+		SceneManager.LoadScene("GeneratedTrack");
+	}
 }

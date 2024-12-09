@@ -5,17 +5,52 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/1_SelfDrivingCar/Scenes/LauncherScene.unity
-  - enabled: 1
-    path: Assets/1_SelfDrivingCar/Scenes/LakeTrackAutonomous.unity
-  - enabled: 1
-    path: Assets/1_SelfDrivingCar/Scenes/LakeTrackTraining.unity
-  - enabled: 1
-    path: Assets/1_SelfDrivingCar/Scenes/MenuScene.unity
-  - enabled: 1
+    guid: 122bdeaec1483475b8fc97c588c07408
+  - enabled: 0
     path: Assets/1_SelfDrivingCar/Scenes/ControlMenu.unity
+    guid: 30ccdbcde5c1b3c4ebee6e6257a9fad9
+  - enabled: 0
+    path: Assets/1_SelfDrivingCar/Scenes/MenuScene.unity
+    guid: 4f9ad3000a46342c395e5d94cebb50a8
+  - enabled: 0
+    path: Assets/1_SelfDrivingCar/Scenes/LakeTrack/LakeTrackTrainingDay.unity
+    guid: e158ba0cbb4654cafad34381986b6e99
+  - enabled: 0
+    path: Assets/1_SelfDrivingCar/Scenes/LakeTrack/LakeTrackAutonomousDay.unity
+    guid: fd651fa0c4da24c0ca94c0e50ec94f5e
+  - enabled: 0
+    path: Assets/1_SelfDrivingCar/Scenes/LakeTrack/LakeTrackAutonomousDayNightCycle.unity
+    guid: b023c6d20291643d09c5d365c36e4ce7
+  - enabled: 0
+    path: Assets/1_SelfDrivingCar/Scenes/JungleTrack/JungleTrackTrainingDay.unity
+    guid: 3fcd9eae6f7374e52b07ea0b385f2ebf
+  - enabled: 0
+    path: Assets/1_SelfDrivingCar/Scenes/JungleTrack/JungleTrackAutonomousDay.unity
+    guid: bffdadfbff6194ed797a48854324ff3f
+  - enabled: 0
+    path: Assets/1_SelfDrivingCar/Scenes/JungleTrack/JungleTrackTrainingDayNightCycle.unity
+    guid: 339d6b6d2d3f3444b96048161a45b8f1
+  - enabled: 0
+    path: Assets/1_SelfDrivingCar/Scenes/JungleTrack/JungleTrackAutonomousDayNightCycle.unity
+    guid: a718b7adceffe4a909e4c93229857d3d
+  - enabled: 0
+    path: Assets/1_SelfDrivingCar/Scenes/MountainTrack/MountainTrackTrainingDayNightCycle.unity
+    guid: d2c03ed633455414ab18b8ba4cf8242c
+  - enabled: 0
+    path: Assets/1_SelfDrivingCar/Scenes/MountainTrack/MountainTrackAutonomousDay.unity
+    guid: f2bd652342d9141928f5ea9300777f40
+  - enabled: 0
+    path: Assets/1_SelfDrivingCar/Scenes/MountainTrack/MountainTrackTrainingDay.unity
+    guid: ba6bd29fb54b04b54a86cf806c3e58cf
+  - enabled: 0
+    path: Assets/1_SelfDrivingCar/Scenes/MountainTrack/MountainTrackAutonomousDayNightCycle.unity
+    guid: 855cc0453f8ee4d498ea91600591dbda
+  - enabled: 0
+    path: Assets/1_SelfDrivingCar/Scenes/LakeTrack/LakeTrackTrainingDayNightCycle.unity
+    guid: 1e76cc5c2aa8e4784990435d8fad9732
   - enabled: 1
-    path: Assets/1_SelfDrivingCar/Scenes/JungleTrackAutonomous.unity
-  - enabled: 1
-    path: Assets/1_SelfDrivingCar/Scenes/JungleTrackTraining.unity
+    path: Assets/1_SelfDrivingCar/Scenes/GeneratedTrack.unity
+    guid: 4c2e3efa005fb47c38d119e186ff8387
+  m_configObjects: {}
